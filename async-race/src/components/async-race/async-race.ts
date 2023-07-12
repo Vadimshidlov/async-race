@@ -4,6 +4,7 @@ import createElement from '../element/element-creator';
 import { CreateInputElement } from '../create-input/create-input';
 import { CreateButtonElement } from '../create-input/create-button';
 import { ColorPicker } from '../create-input/color-picker';
+import { Car } from '../cars/car';
 
 export class AsyncRace {
   private body = document.body;
@@ -20,17 +21,27 @@ export class AsyncRace {
 
   private updateColorPicker = new ColorPicker();
 
+  private garage: HTMLElement = createElement({
+    tag: 'div',
+    classNames: ['garage'],
+    text: '',
+  });
+
   constructor() {
     this.getHtmlPAge();
+    this.getCars();
   }
 
   public getHtmlPAge(): void {
+    // HEADER
     const header: HTMLElement = getHeader();
     const main = createElement({
       tag: 'main',
       classNames: ['main', '_container'],
       text: '',
     });
+
+    // CONTROLLER
     const controllerSection = createElement({
       tag: 'section',
       classNames: ['controller'],
@@ -66,9 +77,53 @@ export class AsyncRace {
     controllerSection.append(createBlock);
     controllerSection.append(updateBlock);
 
+    // GARAGE
+
+    const garageBlock = createElement({
+      tag: 'section',
+      classNames: ['garage__block', 'block-garage'],
+      text: '',
+    });
+
+    const garageInfo = createElement({
+      tag: 'div',
+      classNames: ['block-garage__info'],
+      text: '',
+    });
+
+    const garageTitle = createElement({
+      tag: 'h1',
+      classNames: ['block-garage__title'],
+      text: 'GARAGE',
+    });
+
+    const garageCount = createElement({
+      tag: 'span',
+      classNames: ['block-garage__count'],
+      text: '#',
+    });
+
+    garageInfo.append(garageTitle, garageCount);
+
+    // const garageItems = createElement({
+    //   tag: 'div',
+    //   classNames: ['garage'],
+    //   text: '',
+    // });
+
+    garageBlock.append(garageInfo);
+    garageBlock.append(garageInfo, this.garage);
+
     main.append(controllerSection);
+    main.append(garageBlock);
 
     this.body.append(header);
     this.body.append(main);
+  }
+
+  private getCars(): void {
+    const car = new Car().getCar();
+
+    this.garage.append(car);
   }
 }
