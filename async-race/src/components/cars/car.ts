@@ -1,46 +1,25 @@
-import { CreateButtonElement } from '../create-input/create-button';
-import createElement from '../element/element-creator';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const carSvg = require('../../assets/svg/car.svg');
+import createElement from "../element/element-creator";
+import {getCarImage} from "./get-car-image";
+
+// const car = require('../../assets/svg/1299198.svg')
+
 
 export class Car {
-  private carField: HTMLElement;
+    private readonly element: HTMLElement;
 
-  constructor() {
-    this.carField = createElement({
-      tag: 'div',
-      classNames: ['car-filed'],
-      text: '',
-    });
-    this.configureElement();
-  }
+    constructor() {
+        // this.element = createElement({tag: 'div', classNames: ['icon', 'fb'], text: ''})
+        this.element = createElement({tag: 'div', classNames: ['car'], text: ''})
+        this.configureElement()
+    }
 
-  private configureElement(): void {
-    const carControllers = createElement({
-      tag: 'div',
-      classNames: ['car-filed__controller'],
-      text: '',
-    });
+    private configureElement(): void {
+        const car = getCarImage('RGB(125,60,65)')
+        this.element.innerHTML = car;
+    }
 
-    const driveButton = new CreateButtonElement('Start').getElement();
-    const stopButton = new CreateButtonElement('Stop').getElement();
-    carControllers.append(driveButton, stopButton);
+    public getCar(): HTMLElement {
+        return this.element
+    }
 
-    const roadWrapper = createElement({
-      tag: 'div',
-      classNames: ['car-filed_road'],
-      text: '',
-    });
-
-    roadWrapper.append(carSvg.src);
-
-    // eslint-disable-next-line global-require
-
-    // https://svgsilh.com/image/1918554.html  <---------CAR
-    this.carField.append(carControllers, roadWrapper);
-  }
-
-  public getCar(): HTMLElement {
-    return this.carField;
-  }
 }

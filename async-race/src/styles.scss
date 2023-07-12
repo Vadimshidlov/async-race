@@ -59,7 +59,7 @@ body {
 }
 
 ._container {
-  max-width: 1200px;
+  max-width: 90vw;
   margin: 0 auto;
   padding: 0 10px;
 }
@@ -70,11 +70,14 @@ body {
   .block-garage__info {
     display: flex;
     gap: 10px;
+    margin-bottom: 20px;
+
     .block-garage__title {
     }
+
     .block-garage__count {
     }
   }
-  .garage {
-  }
+
+
 }
