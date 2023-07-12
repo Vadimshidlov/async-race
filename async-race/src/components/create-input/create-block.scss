@@ -1,0 +1,40 @@
+.controller {
+  display: flex;
+  flex-direction: column;
+  row-gap: 20px;
+  .controller__block {
+    display: flex;
+    column-gap: 20px;
+    .create-block__input {
+      font-size: 1.2rem;
+    }
+    .create-block__input__color-picker {
+      border-radius: 4px;
+    }
+    .create-block__button {
+      width: 100px;
+      height: 30px;
+      font-size: 1.2rem;
+      color: black;
+      border-radius: 4px;
+    }
+  }
+}
+
+// .controller__create-block {
+//   display: flex;
+//   column-gap: 20px;
+//   .create-block__input {
+//     font-size: 1.2rem;
+//   }
+//   .create-block__input__color-picker {
+//     border-radius: 4px;
+//   }
+//   .create-block__button {
+//     width: 100px;
+//     height: 30px;
+//     font-size: 1.2rem;
+//     color: black;
+//     border-radius: 4px;
+//   }
+// }

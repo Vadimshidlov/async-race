@@ -1,5 +1,9 @@
-import { GetCars } from './components/cars/get-cars';
+// import { GetCars } from './components/cars/get-cars';
 
-const garage = new GetCars();
+import { AsyncRace } from './components/async-race/async-race';
 
-const cars = garage.getCars();
+// const garage = new GetCars();
+
+// const cars = garage.getCars();
+
+const race = new AsyncRace();
