@@ -16,6 +16,13 @@ export class CreateInputElement {
     }
   }
 
+  public getInputValue(): string {
+    if (!(this.element instanceof HTMLInputElement)) {
+      return '';
+    }
+    return this.element.value;
+  }
+
   public getElement(): HTMLElement {
     return this.element;
   }

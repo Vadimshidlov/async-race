@@ -19,8 +19,10 @@ export class Winners {
     order?: string,
   ): Promise<WinnersType[]> {
     let url: string;
+
     if (page && limit && sort && order) {
-      url = `http://127.0.0.1:3000/winners/_page=${page}&_limit=${limit}&_sort=${sort}&_order=${order}`;
+      // url = `http://127.0.0.1:3000/winners/_page=${page}&_limit=${limit}&_sort=${sort}&_order=${order}`;
+      url = `${this.winnersUrl}_page=${page}&_limit=${limit}&_sort=${sort}&_order=${order}`;
     } else {
       url = this.winnersUrl;
     }

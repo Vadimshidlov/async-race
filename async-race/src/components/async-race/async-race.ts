@@ -161,15 +161,21 @@ export class AsyncRace {
 
   private addEventListeners(): void {
     this.createButtonElement.addEventListener('click', async () => {
-      const pikerValue = this.colorPicker.getValue();
+      const colorValue = this.colorPicker.getInputValue();
+      const textValue = this.createInput.getInputValue();
       const res = await helperRequest();
-      console.log(pikerValue);
+      console.log(colorValue);
       console.log(res);
     });
 
     this.updateButtonElement.addEventListener('click', () => {
-      const pikerValue = this.updateColorPicker.getValue();
-      console.log(pikerValue);
+      /* const pikerValue = this.updateColorPicker.getInputValue();
+      console.log(pikerValue); */
+
+      const carAnamtion = document.querySelector('.car');
+      if (carAnamtion instanceof HTMLElement && carAnamtion) {
+        carAnamtion.style.animationPlayState = 'paused';
+      }
     });
   }
 
