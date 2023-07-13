@@ -53,9 +53,6 @@ export class CarGarage {
   public async deleteCar(id: number): Promise<object> {
     const url = `${this.garageUrl}${id}`;
     const response = await fetch(url, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
       method: 'DELETE',
     });
 
