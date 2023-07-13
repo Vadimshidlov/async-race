@@ -1,29 +1,28 @@
 import createElement from '../element/element-creator';
 
 export class CreateInputElement {
-  private element: HTMLElement;
+    private readonly element: HTMLInputElement;
 
-  private readonly inputPlaceholder = 'Write name';
+    private readonly inputPlaceholder = 'Write name';
 
-  constructor() {
-    this.element = createElement({ tag: 'input', classNames: ['create-block__input'], text: '' });
-    this.configureElement();
-  }
-
-  private configureElement(): void {
-    if (this.element instanceof HTMLInputElement) {
-      this.element.placeholder = this.inputPlaceholder;
+    constructor() {
+        this.element = createElement({tag: 'input', classNames: ['create-block__input'], text: ''});
+        this.configureElement();
     }
-  }
 
-  public getInputValue(): string {
-    if (!(this.element instanceof HTMLInputElement)) {
-      return '';
+    private configureElement(): void {
+        this.element.placeholder = this.inputPlaceholder;
     }
-    return this.element.value;
-  }
 
-  public getElement(): HTMLElement {
-    return this.element;
-  }
+    public getInputValue(): string {
+        return this.element.value;
+    }
+
+    public clearInputValue(): void {
+        this.element.value = '';
+    }
+
+    public getElement(): HTMLInputElement {
+        return this.element;
+    }
 }

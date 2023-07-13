@@ -1,28 +1,29 @@
-import { CarEngine } from '../../services/CarEngine';
+import {CarEngine} from '../../services/CarEngine';
 import createElement from '../element/element-creator';
-import { getCarImage } from './get-car-image';
+import {getCarImage} from './get-car-image';
 
 // const car = require('../../assets/svg/1299198.svg')
 
 export class Car {
-  private readonly element: HTMLElement;
+    private readonly element: HTMLElement;
 
-  private carEngine = new CarEngine();
+    private carEngine = new CarEngine();
 
-  constructor() {
-    // this.element = createElement({tag: 'div', classNames: ['icon', 'fb'], text: ''})
-    this.element = createElement({ tag: 'div', classNames: ['car'], text: '' });
-    this.configureElement();
-  }
+    constructor() {
+        // this.element = createElement({tag: 'div', classNames: ['icon', 'fb'], text: ''})
+        this.element = createElement({tag: 'div', classNames: ['car'], text: ''});
+        this.configureElement();
+    }
 
-  private configureElement(): void {
-    const car = getCarImage('RGB(125,60,65)');
-    this.element.innerHTML = car;
-  }
+    private configureElement(): void {
+        const car = getCarImage('RGB(125,60,65)');
 
-  public getCar(): HTMLElement {
-    return this.element;
-  }
+        this.element.innerHTML = car;
+    }
+
+    public getCar(): HTMLElement {
+        return this.element;
+    }
 
 //   public async startEngine(): Promise<StartEngineType> {}
 }

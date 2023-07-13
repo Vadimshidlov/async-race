@@ -10,12 +10,17 @@
 
     .car-filed__controller {
       display: flex;
+      align-items: center;
       column-gap: 15px;
 
       .create-block__button {
         width: 50px;
         height: 25px;
         border-radius: 5px;
+      }
+
+      .car-filed__name {
+        font-size: 1.2rem;
       }
     }
 
