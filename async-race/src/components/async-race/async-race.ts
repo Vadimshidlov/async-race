@@ -1,173 +1,185 @@
 import getHeader from '../header/header';
 import '../../styles.scss';
 import createElement from '../element/element-creator';
-import {CreateInputElement} from '../create-input/create-input';
-import {CreateButtonElement} from '../create-input/create-button';
-import {ColorPicker} from '../create-input/color-picker';
-import {CarField} from '../cars/car-field';
+import { CreateInputElement } from '../create-input/create-input';
+import { CreateButtonElement } from '../create-input/create-button';
+import { ColorPicker } from '../create-input/color-picker';
+import { CarField } from '../cars/car-field';
+import { helperRequest } from '../cars/helper-request';
 
 export class AsyncRace {
-    private body = document.body;
+  private body = document.body;
 
-    private createInput: CreateInputElement = new CreateInputElement();
+  private createInput: CreateInputElement = new CreateInputElement();
 
-    private createInputElement: HTMLElement;
+  private createInputElement: HTMLElement;
 
-    private readonly updateInput: CreateInputElement = new CreateInputElement();
+  private readonly updateInput: CreateInputElement = new CreateInputElement();
 
-    private readonly updateInputElement: HTMLElement;
+  private readonly updateInputElement: HTMLElement;
 
-    private createButton: CreateButtonElement = new CreateButtonElement('Create');
+  private createButton: CreateButtonElement = new CreateButtonElement('Create');
 
-    private readonly createButtonElement: HTMLElement;
+  private readonly createButtonElement: HTMLElement;
 
-    private readonly updateButton: CreateButtonElement = new CreateButtonElement('Update');
+  private readonly updateButton: CreateButtonElement = new CreateButtonElement('Update');
 
-    private readonly updateButtonElement: HTMLElement;
+  private readonly updateButtonElement: HTMLElement;
 
-    private raceStartButton: CreateButtonElement = new CreateButtonElement('Race');
+  private raceStartButton: CreateButtonElement = new CreateButtonElement('Race');
 
-    private raceStartButtonElement: HTMLElement;
+  private raceStartButtonElement: HTMLElement;
 
-    private raceResetButton: CreateButtonElement = new CreateButtonElement('Reset');
+  private raceResetButton: CreateButtonElement = new CreateButtonElement('Reset');
 
-    private raceResetButtonElement: HTMLElement;
+  private raceResetButtonElement: HTMLElement;
 
-    private generateCarButton: CreateButtonElement = new CreateButtonElement('Get Cars');
+  private generateCarButton: CreateButtonElement = new CreateButtonElement('Get Cars');
 
-    private generateCarButtonElement: HTMLElement;
+  private generateCarButtonElement: HTMLElement;
 
-    private colorPicker = new ColorPicker();
+  private colorPicker = new ColorPicker();
 
-    private colorPickerElement: HTMLElement;
+  private colorPickerElement: HTMLElement;
 
-    private updateColorPicker = new ColorPicker();
+  private updateColorPicker = new ColorPicker();
 
-    private updateColorPickerElement: HTMLElement;
+  private updateColorPickerElement: HTMLElement;
 
+  private garage: HTMLElement = createElement({
+    tag: 'div',
+    classNames: ['garage'],
+    text: '',
+  });
 
-    private garage: HTMLElement = createElement({
-        tag: 'div',
-        classNames: ['garage'],
-        text: '',
+  constructor() {
+    this.generateCarButtonElement = this.generateCarButton.getElement();
+    this.raceResetButtonElement = this.raceResetButton.getElement();
+    this.raceStartButtonElement = this.raceStartButton.getElement();
+    this.createInputElement = this.createInput.getElement();
+    this.updateInputElement = this.updateInput.getElement();
+    this.createButtonElement = this.createButton.getElement();
+    this.updateButtonElement = this.updateButton.getElement();
+    this.colorPickerElement = this.colorPicker.getElement();
+    this.updateColorPickerElement = this.updateColorPicker.getElement();
+    this.getHtmlPAge();
+    this.getCars();
+    this.addEventListeners();
+  }
+
+  public getHtmlPAge(): void {
+    // HEADER
+    const header: HTMLElement = getHeader();
+    const main = createElement({
+      tag: 'main',
+      classNames: ['main', '_container'],
+      text: '',
     });
 
+    // CONTROLLER
+    const controllerSection = createElement({
+      tag: 'section',
+      classNames: ['controller'],
+      text: '',
+    });
 
-    constructor() {
-        this.generateCarButtonElement = this.generateCarButton.getElement()
-        this.raceResetButtonElement = this.raceResetButton.getElement()
-        this.raceStartButtonElement = this.raceStartButton.getElement()
-        this.createInputElement = this.createInput.getElement()
-        this.updateInputElement = this.updateInput.getElement()
-        this.createButtonElement = this.createButton.getElement()
-        this.updateButtonElement = this.updateButton.getElement()
-        this.colorPickerElement = this.colorPicker.getElement()
-        this.updateColorPickerElement = this.updateColorPicker.getElement()
-        this.getHtmlPAge();
-        this.getCars();
-        this.addEventListeners()
-    }
+    const createBlock = createElement({
+      tag: 'div',
+      classNames: ['controller__block', 'block-create'],
+      text: '',
+    });
+    createBlock.append(this.createInputElement, this.colorPickerElement, this.createButtonElement);
 
-    public getHtmlPAge(): void {
-        // HEADER
-        const header: HTMLElement = getHeader();
-        const main = createElement({
-            tag: 'main',
-            classNames: ['main', '_container'],
-            text: '',
-        });
+    const updateBlock = createElement({
+      tag: 'div',
+      classNames: ['controller__block', 'block-update'],
+      text: '',
+    });
+    updateBlock.append(
+      this.updateInputElement,
+      this.updateColorPickerElement,
+      this.updateButtonElement,
+    );
 
-        // CONTROLLER
-        const controllerSection = createElement({
-            tag: 'section',
-            classNames: ['controller'],
-            text: '',
-        });
+    const raceBlock = createElement({
+      tag: 'div',
+      classNames: ['controller__block', 'block-race'],
+      text: '',
+    });
 
-        const createBlock = createElement({
-            tag: 'div',
-            classNames: ['controller__block', 'block-create'],
-            text: '',
-        });
-        createBlock.append(this.createInputElement, this.colorPickerElement, this.createButtonElement);
+    raceBlock.append(
+      this.raceStartButtonElement,
+      this.raceResetButtonElement,
+      this.generateCarButtonElement,
+    );
 
-        const updateBlock = createElement({
-            tag: 'div',
-            classNames: ['controller__block', 'block-update'],
-            text: '',
-        });
-        updateBlock.append(this.updateInputElement, this.updateColorPickerElement, this.updateButtonElement);
+    controllerSection.append(createBlock, updateBlock, raceBlock);
 
-        const raceBlock = createElement({
-            tag: 'div',
-            classNames: ['controller__block', 'block-race'],
-            text: '',
-        });
+    // GARAGE
 
-        raceBlock.append(this.raceStartButtonElement, this.raceResetButtonElement, this.generateCarButtonElement);
+    const garageBlock = createElement({
+      tag: 'section',
+      classNames: ['garage__block', 'block-garage'],
+      text: '',
+    });
 
-        controllerSection.append(createBlock, updateBlock, raceBlock);
+    const garageInfo = createElement({
+      tag: 'div',
+      classNames: ['block-garage__info'],
+      text: '',
+    });
 
-        // GARAGE
+    const garageTitle = createElement({
+      tag: 'h1',
+      classNames: ['block-garage__title'],
+      text: 'GARAGE',
+    });
 
-        const garageBlock = createElement({
-            tag: 'section',
-            classNames: ['garage__block', 'block-garage'],
-            text: '',
-        });
+    const garageCount = createElement({
+      tag: 'span',
+      classNames: ['block-garage__count'],
+      text: '#',
+    });
 
-        const garageInfo = createElement({
-            tag: 'div',
-            classNames: ['block-garage__info'],
-            text: '',
-        });
+    garageInfo.append(garageTitle, garageCount);
 
-        const garageTitle = createElement({
-            tag: 'h1',
-            classNames: ['block-garage__title'],
-            text: 'GARAGE',
-        });
+    // const garageItems = createElement({
+    //   tag: 'div',
+    //   classNames: ['garage'],
+    //   text: '',
+    // });
 
-        const garageCount = createElement({
-            tag: 'span',
-            classNames: ['block-garage__count'],
-            text: '#',
-        });
+    garageBlock.append(garageInfo);
+    garageBlock.append(garageInfo, this.garage);
 
-        garageInfo.append(garageTitle, garageCount);
+    main.append(controllerSection);
+    main.append(garageBlock);
 
-        // const garageItems = createElement({
-        //   tag: 'div',
-        //   classNames: ['garage'],
-        //   text: '',
-        // });
+    this.body.append(header);
+    this.body.append(main);
+  }
 
-        garageBlock.append(garageInfo);
-        garageBlock.append(garageInfo, this.garage);
+  private addEventListeners(): void {
+    this.createButtonElement.addEventListener('click', async () => {
+      const pikerValue = this.colorPicker.getValue();
+      const res = await helperRequest();
+      console.log(pikerValue);
+      console.log(res);
+    });
 
-        main.append(controllerSection);
-        main.append(garageBlock);
+    this.updateButtonElement.addEventListener('click', () => {
+      const pikerValue = this.updateColorPicker.getValue();
+      console.log(pikerValue);
+    });
+  }
 
-        this.body.append(header);
-        this.body.append(main);
-    }
-
-    private addEventListeners(): void {
-        this.createButtonElement.addEventListener('click', () => {
-            const pikerValue = this.colorPicker.getValue()
-            console.log(pikerValue);
-        })
-
-        this.updateButtonElement.addEventListener('click', () => {
-            const pikerValue = this.updateColorPicker.getValue()
-            console.log(pikerValue);
-        })
-    }
-
-    private getCars(): void {
-        for (let i = 0; i < 5; i += 1) {
+  private getCars(): void {
+    /* for (let i = 0; i < 5; i += 1) {
             const car = new CarField().getCar();
             this.garage.append(car);
-        }
-    }
+        } */
+
+    const car = new CarField().getCar();
+    this.garage.append(car);
+  }
 }

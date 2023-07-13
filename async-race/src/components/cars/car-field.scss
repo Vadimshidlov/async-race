@@ -22,6 +22,15 @@
     .car-filed_road {
       position: relative;
 
+      .car {
+        transform: translate(0%, 0px);
+        transition: all 3s linear 0s;
+      }
+
+      .car__drive {
+        transform: translate(85%, 0px);
+      }
+
       .car-filed__flag {
         position: absolute;
         right: 10%;
