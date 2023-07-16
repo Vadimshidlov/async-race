@@ -17,6 +17,7 @@
         display: flex;
         column-gap: 10px;
         align-items: center;
+
         .create-block__button {
           width: 75px;
           padding: 5px 5px 24px 5px;
@@ -26,6 +27,7 @@
           font-weight: 600;
           transition: all 0.5s;
           cursor: pointer;
+
           &:hover {
             opacity: 0.5;
           }
@@ -50,6 +52,7 @@
           font-weight: 600;
           transition: all 0.5s;
           cursor: pointer;
+
           &:hover {
             opacity: 0.5;
           }
@@ -61,17 +64,26 @@
       position: relative;
 
       .car {
-        transform: translate(0%, 0px);
+        /*transform: translateX(0px);
         // transition: all 6s linear 0s;
         transition-property: all;
         transition-timing-function: linear;
         transition-delay: 0s;
         // &:hover {
         //   animation-play-state: paused;
-        // }
+        // }*/
+
+
+        position: relative;
+        top: 6px;
+        left: 40px;
+        transform: translateX(0px);
+        transition-property: all;
+        transition-timing-function: linear;
+        transition-delay: 0s;
       }
 
-      .car__animation-stope {
+      .car__animation-stop {
         animation-play-state: paused;
       }
 
