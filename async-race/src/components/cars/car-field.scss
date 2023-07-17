@@ -73,11 +73,10 @@
         //   animation-play-state: paused;
         // }*/
 
-
-        position: relative;
-        top: 6px;
-        left: 40px;
-        transform: translateX(0px);
+        // position: relative;
+        // top: 6px;
+        // left: 40px;
+        transform: translateX(0%);
         transition-property: all;
         transition-timing-function: linear;
         transition-delay: 0s;
@@ -97,6 +96,10 @@
         bottom: -7px;
         width: 50px;
         height: 100px;
+
+        @media (max-width: 650px) {
+          right: 15%;
+        }
       }
     }
   }

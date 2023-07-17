@@ -1,7 +1,7 @@
 import createElement from '../element/element-creator';
 
 export class CreateButtonElement {
-  private element: HTMLElement;
+  private element: HTMLButtonElement;
 
   // private readonly buttonText = 'Create';
 
@@ -14,7 +14,7 @@ export class CreateButtonElement {
     this.element.textContent = this.buttonText;
   } */
 
-  public getElement(): HTMLElement {
+  public getElement(): HTMLButtonElement {
     return this.element;
   }
 }

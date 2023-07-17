@@ -16,18 +16,47 @@
       border-radius: 4px;
     }
 
-    .create-block__button {
-      width: 100px;
-      height: 30px;
-      font-size: 1.2rem;
-      color: black;
-      border-radius: 4px;
-    }
+    // .create-block__button {
+    //   /* width: 100px;
+    //   height: 30px;
+    //   font-size: 1.2rem;
+    //   color: black;
+    //   border-radius: 4px; */
+
+    //   width: 100px;
+    //   height: 30px;
+    //   font-size: 1.2rem;
+    //   color: black;
+    //   padding: 5px 5px 24px 5px;
+    //   border-radius: 5px;
+    //   font-weight: 600;
+    //   transition: all 0.5s;
+    //   cursor: pointer;
+
+    //   &:hover {
+    //     opacity: 0.5;
+    //   }
+    // }
   }
 
   .block-race {
     display: flex;
     column-gap: 48px;
+    /* .create-block__button {
+      width: 100px;
+      height: 30px;
+      font-size: 1.2rem;
+      color: black;
+      padding: 5px 5px 24px 5px;
+      border-radius: 5px;
+      font-weight: 600;
+      transition: all 0.5s;
+      cursor: pointer;
+
+      &:hover {
+        opacity: 0.5;
+      }
+    } */
   }
 }
 
@@ -48,3 +77,25 @@
 //     border-radius: 4px;
 //   }
 // }
+
+.create-block__button {
+  /* width: 100px;
+  height: 30px;
+  font-size: 1.2rem;
+  color: black;
+  border-radius: 4px; */
+
+  width: 100px;
+  height: 30px;
+  font-size: 1.2rem;
+  color: black;
+  padding: 5px 5px 24px 5px;
+  border-radius: 5px;
+  font-weight: 600;
+  transition: all 0.5s;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.5;
+  }
+}
