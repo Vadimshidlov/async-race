@@ -31,6 +31,10 @@ export class CarEngine {
             method: 'PATCH',
         });
 
+        if (!response.ok) {
+            throw Error('Engine is break down')
+        }
+
         return response;
     }
 }
