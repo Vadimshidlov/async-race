@@ -92,6 +92,7 @@ export class EquipmentCar {
         // const stopButton = new CreateButtonElement('Stop').getElement();
         stateControllersBtns.append(this.selectCarButton, this.removeCarButton, this.carNameElement);
         moveControllersBtns.append(this.startCarButton, this.returnCarButton);
+        this.returnCarButton.disabled = true;
         carControllers.append(stateControllersBtns, moveControllersBtns);
 
         const roadWrapper = createElement({
@@ -121,16 +122,28 @@ export class EquipmentCar {
 
         this.returnCarButton.addEventListener('click', () => {
             console.log('return');
+            this.enableAllButtons()
             this.car.setToStartPosition();
+            this.garageController.enableControllerButtons()
+            this.returnCarButton.disabled = true
         });
 
         this.selectCarButton.addEventListener('click', async () => {
+            this.setSelectedState()
             const garageControllerUpdateButton = this.garageController.getUpdateCarButton()
             this.garageController.setUpdateInputValue(this.carName)
             garageControllerUpdateButton.disabled = false;
             this.garageController.setUpdateSelectCarId(this.car.getCarId())
             this.garageController.setUpdateSelectCarName(this.carName)
         })
+    }
+
+    private setSelectedState(): void {
+        this.equipmentCar.classList.add('car-filed__active')
+    }
+
+    public deleteSelectedState(): void {
+        this.equipmentCar.classList.remove('car-filed__active')
     }
 
     public disableAllButtons(): void {
@@ -141,7 +154,7 @@ export class EquipmentCar {
     }
 
     public enableAllButtons(): void {
-        this.returnCarButton.disabled = false;
+        // this.returnCarButton.disabled = false;
         this.selectCarButton.disabled = false;
         this.removeCarButton.disabled = false;
         this.startCarButton.disabled = false;
@@ -153,9 +166,12 @@ export class EquipmentCar {
     }
 
     public async startSingleMoveCar(): Promise<StartMoveResultType | void> {
+        this.garageController.disableControllerButtons()
         this.disableAllButtons();
         const firstResultTime = await this.car.startMove();
-        this.enableAllButtons();
+        // this.enableAllButtons();
+        // this.garageController.enableControllerButtons()
+        this.returnCarButton.disabled = false;
         return firstResultTime;
     }
 

@@ -178,6 +178,7 @@ export class Garage {
             this.raceParty.forEach((raceMember) => raceMember.setCarToInitialPlace());
             this.raceParty.forEach((raceMember) => raceMember.enableAllButtons());
             this.garageController.enableControllerButtons();
+            this.raceResetButtonElement.disabled = true;
         })
 
         this.updateButtonElement.addEventListener('click', async () => {
@@ -201,6 +202,7 @@ export class Garage {
                 if (raceMemberId === updateCarId) {
                     raceMember.setCarName(updateCarName)
                     raceMember.setCarColor(updateColorValue)
+                    raceMember.deleteSelectedState()
                 }
             })
 

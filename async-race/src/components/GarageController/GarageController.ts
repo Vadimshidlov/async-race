@@ -96,6 +96,7 @@ export class GarageController {
             this.raceResetButtonElement,
             this.generateCarButtonElement,
         );
+        this.raceResetButtonElement.disabled = true;
 
         controllerSection.append(createBlock, updateBlock, raceBlock);
 
@@ -153,15 +154,15 @@ export class GarageController {
         this.raceResetButtonElement.disabled = true;
         this.generateCarButtonElement.disabled = true;
         this.createButtonElement.disabled = true;
-        this.updateButtonElement.disabled = true;
+        // this.updateButtonElement.disabled = true;
     }
 
     public enableControllerButtons(): void {
         this.raceStartButtonElement.disabled = false;
-        this.raceResetButtonElement.disabled = false;
+        // this.raceResetButtonElement.disabled = false;
         this.generateCarButtonElement.disabled = false;
         this.createButtonElement.disabled = false;
-        this.updateButtonElement.disabled = false;
+        // this.updateButtonElement.disabled = false;
     }
 
     public setUpdateInputValue(value: string): void {
