@@ -2,243 +2,57 @@ import getHeader from '../header/header';
 import '../../styles.scss';
 import createElement from '../element/element-creator';
 
-import { PageCOntroller } from '../PageController/PageController';
-import { Garage } from '../garage/Garage';
+import {PageCOntroller} from '../PageController/PageController';
+import {Garage} from '../garage/Garage';
 
 export type RacePArtyType = () => Promise<number>;
 
 export class AsyncRace {
-  private body = document.body;
+    private body = document.body;
 
-  /* private createInput: CreateInputElement = new CreateInputElement();
+    private garage = new Garage();
 
-  private readonly createInputElement: HTMLElement;
+    private garageElement = this.garage.getGarageHtml();
 
-  private readonly updateInput: CreateInputElement = new CreateInputElement();
+    private pageController = new PageCOntroller();
 
-  private readonly updateInputElement: HTMLElement;
+    private pageControllerElement = this.pageController.getPageControlleHTML();
 
-  private readonly raceParty: EquipmentCar[] = []; */
-  // private readonly raceParty: RacePArtyType[] = [];
-  // private readonly raceParty: Promise<void>[] = [];
 
-  /* private readonly createButtonElement: HTMLButtonElement = new CreateButtonElement(
-    'Create',
-  ).getElement();
+    constructor() {
+        this.getHtmlPAge();
+        // this.addEventListeners();
+    }
 
-  private readonly updateButtonElement: HTMLButtonElement = new CreateButtonElement(
-    'Update',
-  ).getElement();
+    // private addEventListeners(): void {
+    //     this.garageElement.addEventListener('click', (event: Event) => {
+    //         if (
+    //             /* event.target instanceof HTMLElement &&
+    //             (event.target.classList.contains('car-filed') ||
+    //                 event.target.parentElement?.classList.contains('car-filed')) */
+    //             event.target instanceof HTMLElement &&
+    //             (event.target.closest('.car-filed')
+    //                 /* ||
+    //                 event.target.parentElement?.closest('.car-filed')) */
+    //             )) {
+    //             event.stopPropagation();
+    //             console.log(event.target.id);
+    //         }
+    //     });
+    // }
 
-  private raceStartButtonElement: HTMLButtonElement = new CreateButtonElement('Race').getElement();
+    public getHtmlPAge(): void {
+        const header: HTMLElement = getHeader();
+        header.append(this.pageControllerElement);
+        const main = createElement({
+            tag: 'main',
+            classNames: ['main', '_container'],
+            text: '',
+        });
 
-  private raceResetButtonElement: HTMLButtonElement = new CreateButtonElement('Reset').getElement();
+        main.append(this.garageElement);
 
-  private generateCarButtonElement: HTMLButtonElement = new CreateButtonElement(
-    'Get Cars',
-  ).getElement();
-
-  private colorPicker = new ColorPicker();
-
-  private colorPickerElement: HTMLInputElement;
-
-  private updateColorPicker = new ColorPicker();
-
-  private updateColorPickerElement: HTMLElement; */
-
-  private garage = new Garage();
-
-  private garageElement = this.garage.getGarageHtml();
-
-  private pageController = new PageCOntroller();
-
-  private pageControllerelement = this.pageController.getPageControlleHTML();
-
-  // private membersRace: EquipmentCar[] = [];
-
-  // private garage: HTMLElement = createElement({
-  //     tag: 'div',
-  //     classNames: ['garage'],
-  //     text: '',
-  // });
-
-  // private carGarageApi = new CarGarage();
-
-  constructor() {
-    // this.generateCarButtonElement = this.generateCarButton.getElement();
-    // this.raceResetButtonElement = this.raceResetButton.getElement();
-    // this.raceStartButtonElement = this.raceStartButton.getElement();
-    // this.createInputElement = this.createInput.getElement();
-    // this.updateInputElement = this.updateInput.getElement();
-    // this.createButtonElement = this.createButton.getElement();
-    // this.updateButtonElement = this.updateButton.getElement();
-    // this.colorPickerElement = this.colorPicker.getElement();
-    // this.updateColorPickerElement = this.updateColorPicker.getElement();
-    this.getHtmlPAge();
-    this.addEventListners();
-    // this.getCars();
-    // this.addEventListeners();
-  }
-
-  private addEventListners(): void {
-    this.garageElement.addEventListener('click', (event: Event) => {
-      if (
-        event.target instanceof HTMLElement &&
-        (event.target.classList.contains('car-filed') ||
-          event.target.parentElement?.classList.contains('car-filed'))
-      ) {
-        event.stopPropagation();
-        console.log(event.target.id);
-      }
-    });
-  }
-
-  public getHtmlPAge(): void {
-    // HEADER
-    const header: HTMLElement = getHeader();
-    header.append(this.pageControllerelement);
-    const main = createElement({
-      tag: 'main',
-      classNames: ['main', '_container'],
-      text: '',
-    });
-
-    // CONTROLLER
-    /* const controllerSection = createElement({
-      tag: 'section',
-      classNames: ['controller'],
-      text: '',
-    });
-
-    const createBlock = createElement({
-      tag: 'div',
-      classNames: ['controller__block', 'block-create'],
-      text: '',
-    });
-    createBlock.append(this.createInputElement, this.colorPickerElement, this.createButtonElement);
-
-    const updateBlock = createElement({
-      tag: 'div',
-      classNames: ['controller__block', 'block-update'],
-      text: '',
-    });
-    updateBlock.append(
-      this.updateInputElement,
-      this.updateColorPickerElement,
-      this.updateButtonElement,
-    );
-
-    const raceBlock = createElement({
-      tag: 'div',
-      classNames: ['controller__block', 'block-race'],
-      text: '',
-    });
-
-    raceBlock.append(
-      this.raceStartButtonElement,
-      this.raceResetButtonElement,
-      this.generateCarButtonElement,
-    );
-
-    controllerSection.append(createBlock, updateBlock, raceBlock); */
-
-    // GARAGE
-
-    // const garageBlock = createElement({
-    //   tag: 'section',
-    //   classNames: ['garage__block', 'block-garage'],
-    //   text: '',
-    // });
-
-    // const garageInfo = createElement({
-    //   tag: 'div',
-    //   classNames: ['block-garage__info'],
-    //   text: '',
-    // });
-
-    // const garageTitle = createElement({
-    //   tag: 'h1',
-    //   classNames: ['block-garage__title'],
-    //   text: 'GARAGE',
-    // });
-
-    // const garageCount = createElement({
-    //   tag: 'span',
-    //   classNames: ['block-garage__count'],
-    //   text: '#',
-    // });
-
-    // garageInfo.append(garageTitle, garageCount);
-
-    // const garageItems = createElement({
-    //   tag: 'div',
-    //   classNames: ['garage'],
-    //   text: '',
-    // });
-
-    // garageBlock.append(garageInfo);
-    // garageBlock.append(garageInfo, this.garage);
-
-    // main.append(controllerSection);
-    main.append(this.garageElement);
-
-    this.body.append(header);
-    this.body.append(main);
-  }
-
-  // private addEventListeners(): void {
-  //   // this.createButtonElement.addEventListener('click', async () => {
-  //   //   const textValue = this.createInput.getInputValue();
-  //   //   const colorValue = this.colorPicker.getInputValue();
-  //   //   // const res = await helperRequest();
-  //   //   // console.log(colorValue);
-  //   //   // console.log(res);
-  //   //   const res = await this.carGarageApi.createCar(textValue, colorValue);
-  //   //   console.log(res);
-  //   //   /* const allCars = await this.carGarageApi.getCars(2);
-  //   //               console.log(allCars, `allCars`); */
-  //   //   this.garage.innerHTML = '';
-  //   //   await this.getCars();
-  //   //   this.createInput.clearInputValue();
-  //   //   this.colorPicker.clearInputValue();
-  //   // });
-  //   // this.updateButtonElement.addEventListener('click', () => {
-  //   //   /* const pikerValue = this.updateColorPicker.getInputValue();
-  //   //                     console.log(pikerValue); */
-  //   //   const carAnimation = document.querySelector('.car');
-  //   //   if (carAnimation instanceof HTMLElement && carAnimation) {
-  //   //     carAnimation.style.animationPlayState = 'paused';
-  //   //   }
-  //   // });
-  //   // this.raceStartButtonElement.addEventListener('click', async () => {
-  //   //   const raceResult = await Promise.all(
-  //   //     this.raceParty.map((raceMemberMethod) => raceMemberMethod.startMoveCar()),
-  //   //   );
-  //   //   console.log(raceResult.filter((raceMember) => !!raceMember));
-  //   // });
-  // }
-
-  // private async getCars(page = 1): Promise<void> {
-  //   const pageCars = await this.carGarageApi.getCars();
-  //   console.log(pageCars, `pageCars`);
-  //   this.raceParty.length = 0;
-  //   // const raceParty: RacePArtyType[] = [];
-
-  //   pageCars.forEach((carData) => {
-  //     console.log(carData, `carData`);
-  //     const equipmentProps = {
-  //       carColor: carData.color,
-  //       carName: carData.name,
-  //       id: carData.id,
-  //     };
-
-  //     // console.log(`id ofCar ~~>`, equipmentProps.id, typeof equipmentProps.id);
-  //     const equipmentCar = new EquipmentCar(equipmentProps);
-  //     const car = equipmentCar.getCar();
-  //     this.raceParty.push(equipmentCar);
-  //     // this.membersRace.push(equipmentCar);
-  //     this.garage.append(car);
-  //   });
-  //   console.log(this.raceParty);
-  // }
+        this.body.append(header);
+        this.body.append(main);
+    }
 }

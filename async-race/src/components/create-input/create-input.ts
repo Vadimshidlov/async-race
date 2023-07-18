@@ -18,6 +18,10 @@ export class CreateInputElement {
         return this.element.value;
     }
 
+    public setInputValue(value: string): void {
+        this.element.value = value;
+    }
+
     public clearInputValue(): void {
         this.element.value = '';
     }

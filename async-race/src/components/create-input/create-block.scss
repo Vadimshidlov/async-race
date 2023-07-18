@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   row-gap: 5px;
-  margin-bottom: 30px;
+  margin-bottom: 10px;
 
   .controller__block {
     display: flex;
@@ -16,80 +16,21 @@
       border-radius: 4px;
     }
 
-    // .create-block__button {
-    //   /* width: 100px;
-    //   height: 30px;
-    //   font-size: 1.2rem;
-    //   color: black;
-    //   border-radius: 4px; */
-
-    //   width: 100px;
-    //   height: 30px;
-    //   font-size: 1.2rem;
-    //   color: black;
-    //   padding: 5px 5px 24px 5px;
-    //   border-radius: 5px;
-    //   font-weight: 600;
-    //   transition: all 0.5s;
-    //   cursor: pointer;
-
-    //   &:hover {
-    //     opacity: 0.5;
-    //   }
-    // }
   }
 
   .block-race {
     display: flex;
     column-gap: 48px;
-    /* .create-block__button {
-      width: 100px;
-      height: 30px;
-      font-size: 1.2rem;
-      color: black;
-      padding: 5px 5px 24px 5px;
-      border-radius: 5px;
-      font-weight: 600;
-      transition: all 0.5s;
-      cursor: pointer;
 
-      &:hover {
-        opacity: 0.5;
-      }
-    } */
   }
 }
 
-// .controller__create-block {
-//   display: flex;
-//   column-gap: 20px;
-//   .create-block__input {
-//     font-size: 1.2rem;
-//   }
-//   .create-block__input__color-picker {
-//     border-radius: 4px;
-//   }
-//   .create-block__button {
-//     width: 100px;
-//     height: 30px;
-//     font-size: 1.2rem;
-//     color: black;
-//     border-radius: 4px;
-//   }
-// }
-
 .create-block__button {
-  /* width: 100px;
-  height: 30px;
-  font-size: 1.2rem;
-  color: black;
-  border-radius: 4px; */
-
   width: 100px;
-  height: 30px;
-  font-size: 1.2rem;
+  height: 19px;
+  font-size: 1rem;
   color: black;
-  padding: 5px 5px 24px 5px;
+  padding: 3px 5px 21px 5px;
   border-radius: 5px;
   font-weight: 600;
   transition: all 0.5s;

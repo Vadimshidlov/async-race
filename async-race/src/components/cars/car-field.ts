@@ -1,149 +1,185 @@
 /* eslint-disable @typescript-eslint/no-var-requires,global-require */
-import { CreateButtonElement } from '../create-input/create-button';
+import {CreateButtonElement} from '../create-input/create-button';
 import createElement from '../element/element-creator';
 import './car-field.scss';
-import { Car, StartMoveResultType } from './car';
+import {Car, StartMoveResultType} from './car';
+import {GarageController} from "../GarageController/GarageController";
+import {CarGarage} from "../../services/CarGarage";
 
 const carSvg = require('../../assets/svg/car.svg');
 const flag = require('../../assets/svg/flag.svg');
 
 export type EquipmentPropsType = {
-  carColor: string;
-  carName: string;
-  id: number;
+    carColor: string;
+    carName: string;
+    id: number;
+    garageController: GarageController
 };
 
 export class EquipmentCar {
-  private readonly equipmentCar: HTMLElement;
+    private readonly equipmentCar: HTMLElement;
 
-  private carName: HTMLSpanElement;
+    private readonly carNameElement: HTMLSpanElement;
 
-  private car: Car;
+    private car: Car;
 
-  private carElement: HTMLElement;
+    private readonly carElement: HTMLElement;
 
-  private startCarButton = new CreateButtonElement('Start').getElement();
+    private startCarButton = new CreateButtonElement('Start').getElement();
 
-  private returnCarButton = new CreateButtonElement('Return').getElement();
+    private returnCarButton = new CreateButtonElement('Return').getElement();
 
-  private selectCarButton = new CreateButtonElement('Select').getElement();
+    private selectCarButton = new CreateButtonElement('Select').getElement();
 
-  private removeCarButton = new CreateButtonElement('Remove').getElement();
+    private removeCarButton = new CreateButtonElement('Remove').getElement();
 
-  private carFielId: string;
+    private readonly carFieldId: string;
 
-  constructor({ carColor, carName, id }: EquipmentPropsType) {
-    this.equipmentCar = createElement({
-      tag: 'div',
-      classNames: ['car-filed'],
-      text: '',
-    });
-    this.carFielId = `carField-${id}`;
-    this.equipmentCar.id = this.carFielId;
+    private garageController: GarageController;
 
-    // this.startCarButton = new CreateButtonElement('Start').getElement();
-    // this.returnCarButton = new CreateButtonElement('Return').getElement();
-    // this.selectCarButton = new CreateButtonElement('Select').getElement();
-    // this.removeCarButton = new CreateButtonElement('Remove').getElement();
-    this.car = new Car(carColor, id, carName);
-    this.carElement = this.car.getCar();
-    this.carName = createElement<HTMLSpanElement>({
-      tag: 'span',
-      classNames: ['car-filed__name'],
-      text: 'Tesla',
-    });
-    this.configureElement();
-    this.setCarName(carName);
-    this.setCarId(id);
-    this.addEventsHandler();
-  }
+    private carName: string;
 
-  private configureElement(): void {
-    const carControllers = createElement({
-      tag: 'div',
-      classNames: ['car-filed__controller', 'controller'],
-      text: '',
-    });
+    private carGarageService = new CarGarage()
 
-    const stateControllersBtns = createElement({
-      tag: 'div',
-      classNames: ['controller-state'],
-      text: '',
-    });
+    constructor({carColor, carName, id, garageController}: EquipmentPropsType) {
+        this.equipmentCar = createElement({
+            tag: 'div',
+            classNames: ['car-filed'],
+            text: '',
+        });
+        this.carFieldId = `carField-${id}`;
+        this.carName = carName
+        this.equipmentCar.id = this.carFieldId;
 
-    const moveControllersBtns = createElement({
-      tag: 'div',
-      classNames: ['controller-move'],
-      text: '',
-    });
-
-    // const driveButton = new CreateButtonElement('Start').getElement();
-    // const stopButton = new CreateButtonElement('Stop').getElement();
-    stateControllersBtns.append(this.selectCarButton, this.removeCarButton, this.carName);
-    moveControllersBtns.append(this.startCarButton, this.returnCarButton);
-    carControllers.append(stateControllersBtns, moveControllersBtns);
-
-    const roadWrapper = createElement({
-      tag: 'div',
-      classNames: ['car-filed_road'],
-      text: '',
-    });
-    // const car = new Car().getCar();
-    const flagImage = createElement({
-      tag: 'img',
-      classNames: ['car-filed__flag'],
-      text: '',
-    });
-    if (flagImage instanceof HTMLImageElement) {
-      flagImage.src = flag;
+        // this.startCarButton = new CreateButtonElement('Start').getElement();
+        // this.returnCarButton = new CreateButtonElement('Return').getElement();
+        // this.selectCarButton = new CreateButtonElement('Select').getElement();
+        // this.removeCarButton = new CreateButtonElement('Remove').getElement();
+        this.car = new Car(carColor, id, carName);
+        this.carElement = this.car.getCar();
+        this.carNameElement = createElement<HTMLSpanElement>({
+            tag: 'span',
+            classNames: ['car-filed__name'],
+            text: 'Tesla',
+        });
+        this.garageController = garageController
+        this.configureElement();
+        this.setCarName(carName);
+        this.setCarId(id);
+        this.addEventsHandler();
     }
 
-    roadWrapper.append(this.carElement, flagImage);
+    private configureElement(): void {
+        const carControllers = createElement({
+            tag: 'div',
+            classNames: ['car-filed__controller', 'controller'],
+            text: '',
+        });
 
-    this.equipmentCar.append(carControllers, roadWrapper);
-  }
+        const stateControllersBtns = createElement({
+            tag: 'div',
+            classNames: ['controller-state'],
+            text: '',
+        });
 
-  private addEventsHandler(): void {
-    this.startCarButton.addEventListener(`click`, () => {
-      this.startMoveCar();
-    });
+        const moveControllersBtns = createElement({
+            tag: 'div',
+            classNames: ['controller-move'],
+            text: '',
+        });
 
-    this.returnCarButton.addEventListener('click', () => {
-      console.log('return');
-      this.car.setToStartPosition();
-    });
-  }
+        // const driveButton = new CreateButtonElement('Start').getElement();
+        // const stopButton = new CreateButtonElement('Stop').getElement();
+        stateControllersBtns.append(this.selectCarButton, this.removeCarButton, this.carNameElement);
+        moveControllersBtns.append(this.startCarButton, this.returnCarButton);
+        carControllers.append(stateControllersBtns, moveControllersBtns);
 
-  public disableAllButtons(): void {
-    this.returnCarButton.disabled = true;
-    this.selectCarButton.disabled = true;
-    this.removeCarButton.disabled = true;
-    this.startCarButton.disabled = true;
-  }
+        const roadWrapper = createElement({
+            tag: 'div',
+            classNames: ['car-filed_road'],
+            text: '',
+        });
+        // const car = new Car().getCar();
+        const flagImage = createElement({
+            tag: 'img',
+            classNames: ['car-filed__flag'],
+            text: '',
+        });
+        if (flagImage instanceof HTMLImageElement) {
+            flagImage.src = flag;
+        }
 
-  public enableAllButtons(): void {
-    this.returnCarButton.disabled = false;
-    this.selectCarButton.disabled = false;
-    this.removeCarButton.disabled = false;
-    this.startCarButton.disabled = false;
-  }
+        roadWrapper.append(this.carElement, flagImage);
 
-  public async startMoveCar(): Promise<StartMoveResultType | void> {
-    this.disableAllButtons();
-    const firstResultTime = await this.car.startMove();
-    this.enableAllButtons();
-    return firstResultTime;
-  }
+        this.equipmentCar.append(carControllers, roadWrapper);
+    }
 
-  public setCarName(value: string): void {
-    this.carName.textContent = value;
-  }
+    private addEventsHandler(): void {
+        this.startCarButton.addEventListener(`click`, async () => {
+            await this.startSingleMoveCar();
+        });
 
-  private setCarId(id: number): void {
-    this.carElement.id = `${id}`;
-  }
+        this.returnCarButton.addEventListener('click', () => {
+            console.log('return');
+            this.car.setToStartPosition();
+        });
 
-  public getCar(): HTMLElement {
-    return this.equipmentCar;
-  }
+        this.selectCarButton.addEventListener('click', async () => {
+            const garageControllerUpdateButton = this.garageController.getUpdateCarButton()
+            this.garageController.setUpdateInputValue(this.carName)
+            garageControllerUpdateButton.disabled = false;
+            this.garageController.setUpdateSelectCarId(this.car.getCarId())
+            this.garageController.setUpdateSelectCarName(this.carName)
+        })
+    }
+
+    public disableAllButtons(): void {
+        this.returnCarButton.disabled = true;
+        this.selectCarButton.disabled = true;
+        this.removeCarButton.disabled = true;
+        this.startCarButton.disabled = true;
+    }
+
+    public enableAllButtons(): void {
+        this.returnCarButton.disabled = false;
+        this.selectCarButton.disabled = false;
+        this.removeCarButton.disabled = false;
+        this.startCarButton.disabled = false;
+    }
+
+    public async startRaceMoveCar(): Promise<StartMoveResultType | void> {
+        const firstResultTime = await this.car.startMove();
+        return firstResultTime;
+    }
+
+    public async startSingleMoveCar(): Promise<StartMoveResultType | void> {
+        this.disableAllButtons();
+        const firstResultTime = await this.car.startMove();
+        this.enableAllButtons();
+        return firstResultTime;
+    }
+
+    public setCarName(value: string): void {
+        this.carNameElement.textContent = value;
+    }
+
+    private setCarId(id: number): void {
+        this.carElement.id = `${id}`;
+    }
+
+    public getCar(): HTMLElement {
+        return this.equipmentCar;
+    }
+
+    public getCarId(): number {
+        return this.car.getCarId();
+    }
+
+    public setCarColor(value: string): void {
+        this.car.setCarColor(value)
+    }
+
+    public setCarToInitialPlace(): void {
+        this.car.setToStartPosition()
+    }
 }
