@@ -6,7 +6,7 @@ export default function getHeader(): HTMLElement {
 
   const headerTitleText = `It's time to Async-Race!`;
   const headerTitle = createElement({
-    tag: 'header',
+    tag: 'h1',
     classNames: ['header__title'],
     text: headerTitleText,
   });

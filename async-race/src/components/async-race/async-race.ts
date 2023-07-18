@@ -1,228 +1,244 @@
 import getHeader from '../header/header';
 import '../../styles.scss';
 import createElement from '../element/element-creator';
-import {CreateInputElement} from '../create-input/create-input';
-import {CreateButtonElement} from '../create-input/create-button';
-import {ColorPicker} from '../create-input/color-picker';
-import {EquipmentCar} from '../cars/car-field';
-import {CarGarage} from '../../services/CarGarage';
+
+import { PageCOntroller } from '../PageController/PageController';
+import { Garage } from '../garage/Garage';
 
 export type RacePArtyType = () => Promise<number>;
 
 export class AsyncRace {
-    private body = document.body;
+  private body = document.body;
 
-    private createInput: CreateInputElement = new CreateInputElement();
+  /* private createInput: CreateInputElement = new CreateInputElement();
 
-    private readonly createInputElement: HTMLElement;
+  private readonly createInputElement: HTMLElement;
 
-    private readonly updateInput: CreateInputElement = new CreateInputElement();
+  private readonly updateInput: CreateInputElement = new CreateInputElement();
 
-    private readonly updateInputElement: HTMLElement;
+  private readonly updateInputElement: HTMLElement;
 
-    private readonly raceParty: EquipmentCar[] = [];
-    // private readonly raceParty: RacePArtyType[] = [];
-    // private readonly raceParty: Promise<void>[] = [];
+  private readonly raceParty: EquipmentCar[] = []; */
+  // private readonly raceParty: RacePArtyType[] = [];
+  // private readonly raceParty: Promise<void>[] = [];
 
-    private readonly createButtonElement: HTMLButtonElement = new CreateButtonElement(
-        'Create',
-    ).getElement();
+  /* private readonly createButtonElement: HTMLButtonElement = new CreateButtonElement(
+    'Create',
+  ).getElement();
 
-    private readonly updateButtonElement: HTMLButtonElement = new CreateButtonElement(
-        'Update',
-    ).getElement();
+  private readonly updateButtonElement: HTMLButtonElement = new CreateButtonElement(
+    'Update',
+  ).getElement();
 
-    private raceStartButtonElement: HTMLButtonElement = new CreateButtonElement('Race').getElement();
+  private raceStartButtonElement: HTMLButtonElement = new CreateButtonElement('Race').getElement();
 
-    private raceResetButtonElement: HTMLButtonElement = new CreateButtonElement('Reset').getElement();
+  private raceResetButtonElement: HTMLButtonElement = new CreateButtonElement('Reset').getElement();
 
-    private generateCarButtonElement: HTMLButtonElement = new CreateButtonElement(
-        'Get Cars',
-    ).getElement();
+  private generateCarButtonElement: HTMLButtonElement = new CreateButtonElement(
+    'Get Cars',
+  ).getElement();
 
-    private colorPicker = new ColorPicker();
+  private colorPicker = new ColorPicker();
 
-    private colorPickerElement: HTMLInputElement;
+  private colorPickerElement: HTMLInputElement;
 
-    private updateColorPicker = new ColorPicker();
+  private updateColorPicker = new ColorPicker();
 
-    private updateColorPickerElement: HTMLElement;
+  private updateColorPickerElement: HTMLElement; */
 
-    private membersRace: EquipmentCar[] = [];
+  private garage = new Garage();
 
-    private garage: HTMLElement = createElement({
-        tag: 'div',
-        classNames: ['garage'],
-        text: '',
+  private garageElement = this.garage.getGarageHtml();
+
+  private pageController = new PageCOntroller();
+
+  private pageControllerelement = this.pageController.getPageControlleHTML();
+
+  // private membersRace: EquipmentCar[] = [];
+
+  // private garage: HTMLElement = createElement({
+  //     tag: 'div',
+  //     classNames: ['garage'],
+  //     text: '',
+  // });
+
+  // private carGarageApi = new CarGarage();
+
+  constructor() {
+    // this.generateCarButtonElement = this.generateCarButton.getElement();
+    // this.raceResetButtonElement = this.raceResetButton.getElement();
+    // this.raceStartButtonElement = this.raceStartButton.getElement();
+    // this.createInputElement = this.createInput.getElement();
+    // this.updateInputElement = this.updateInput.getElement();
+    // this.createButtonElement = this.createButton.getElement();
+    // this.updateButtonElement = this.updateButton.getElement();
+    // this.colorPickerElement = this.colorPicker.getElement();
+    // this.updateColorPickerElement = this.updateColorPicker.getElement();
+    this.getHtmlPAge();
+    this.addEventListners();
+    // this.getCars();
+    // this.addEventListeners();
+  }
+
+  private addEventListners(): void {
+    this.garageElement.addEventListener('click', (event: Event) => {
+      if (
+        event.target instanceof HTMLElement &&
+        (event.target.classList.contains('car-filed') ||
+          event.target.parentElement?.classList.contains('car-filed'))
+      ) {
+        event.stopPropagation();
+        console.log(event.target.id);
+      }
+    });
+  }
+
+  public getHtmlPAge(): void {
+    // HEADER
+    const header: HTMLElement = getHeader();
+    header.append(this.pageControllerelement);
+    const main = createElement({
+      tag: 'main',
+      classNames: ['main', '_container'],
+      text: '',
     });
 
-    private carGarageApi = new CarGarage();
+    // CONTROLLER
+    /* const controllerSection = createElement({
+      tag: 'section',
+      classNames: ['controller'],
+      text: '',
+    });
 
-    constructor() {
-        // this.generateCarButtonElement = this.generateCarButton.getElement();
-        // this.raceResetButtonElement = this.raceResetButton.getElement();
-        // this.raceStartButtonElement = this.raceStartButton.getElement();
-        this.createInputElement = this.createInput.getElement();
-        this.updateInputElement = this.updateInput.getElement();
-        // this.createButtonElement = this.createButton.getElement();
-        // this.updateButtonElement = this.updateButton.getElement();
-        this.colorPickerElement = this.colorPicker.getElement();
-        this.updateColorPickerElement = this.updateColorPicker.getElement();
-        this.getHtmlPAge();
-        this.getCars();
-        this.addEventListeners();
-    }
+    const createBlock = createElement({
+      tag: 'div',
+      classNames: ['controller__block', 'block-create'],
+      text: '',
+    });
+    createBlock.append(this.createInputElement, this.colorPickerElement, this.createButtonElement);
 
-    public getHtmlPAge(): void {
-        // HEADER
-        const header: HTMLElement = getHeader();
-        const main = createElement({
-            tag: 'main',
-            classNames: ['main', '_container'],
-            text: '',
-        });
+    const updateBlock = createElement({
+      tag: 'div',
+      classNames: ['controller__block', 'block-update'],
+      text: '',
+    });
+    updateBlock.append(
+      this.updateInputElement,
+      this.updateColorPickerElement,
+      this.updateButtonElement,
+    );
 
-        // CONTROLLER
-        const controllerSection = createElement({
-            tag: 'section',
-            classNames: ['controller'],
-            text: '',
-        });
+    const raceBlock = createElement({
+      tag: 'div',
+      classNames: ['controller__block', 'block-race'],
+      text: '',
+    });
 
-        const createBlock = createElement({
-            tag: 'div',
-            classNames: ['controller__block', 'block-create'],
-            text: '',
-        });
-        createBlock.append(this.createInputElement, this.colorPickerElement, this.createButtonElement);
+    raceBlock.append(
+      this.raceStartButtonElement,
+      this.raceResetButtonElement,
+      this.generateCarButtonElement,
+    );
 
-        const updateBlock = createElement({
-            tag: 'div',
-            classNames: ['controller__block', 'block-update'],
-            text: '',
-        });
-        updateBlock.append(
-            this.updateInputElement,
-            this.updateColorPickerElement,
-            this.updateButtonElement,
-        );
+    controllerSection.append(createBlock, updateBlock, raceBlock); */
 
-        const raceBlock = createElement({
-            tag: 'div',
-            classNames: ['controller__block', 'block-race'],
-            text: '',
-        });
+    // GARAGE
 
-        raceBlock.append(
-            this.raceStartButtonElement,
-            this.raceResetButtonElement,
-            this.generateCarButtonElement,
-        );
+    // const garageBlock = createElement({
+    //   tag: 'section',
+    //   classNames: ['garage__block', 'block-garage'],
+    //   text: '',
+    // });
 
-        controllerSection.append(createBlock, updateBlock, raceBlock);
+    // const garageInfo = createElement({
+    //   tag: 'div',
+    //   classNames: ['block-garage__info'],
+    //   text: '',
+    // });
 
-        // GARAGE
+    // const garageTitle = createElement({
+    //   tag: 'h1',
+    //   classNames: ['block-garage__title'],
+    //   text: 'GARAGE',
+    // });
 
-        const garageBlock = createElement({
-            tag: 'section',
-            classNames: ['garage__block', 'block-garage'],
-            text: '',
-        });
+    // const garageCount = createElement({
+    //   tag: 'span',
+    //   classNames: ['block-garage__count'],
+    //   text: '#',
+    // });
 
-        const garageInfo = createElement({
-            tag: 'div',
-            classNames: ['block-garage__info'],
-            text: '',
-        });
+    // garageInfo.append(garageTitle, garageCount);
 
-        const garageTitle = createElement({
-            tag: 'h1',
-            classNames: ['block-garage__title'],
-            text: 'GARAGE',
-        });
+    // const garageItems = createElement({
+    //   tag: 'div',
+    //   classNames: ['garage'],
+    //   text: '',
+    // });
 
-        const garageCount = createElement({
-            tag: 'span',
-            classNames: ['block-garage__count'],
-            text: '#',
-        });
+    // garageBlock.append(garageInfo);
+    // garageBlock.append(garageInfo, this.garage);
 
-        garageInfo.append(garageTitle, garageCount);
+    // main.append(controllerSection);
+    main.append(this.garageElement);
 
-        // const garageItems = createElement({
-        //   tag: 'div',
-        //   classNames: ['garage'],
-        //   text: '',
-        // });
+    this.body.append(header);
+    this.body.append(main);
+  }
 
-        garageBlock.append(garageInfo);
-        garageBlock.append(garageInfo, this.garage);
+  // private addEventListeners(): void {
+  //   // this.createButtonElement.addEventListener('click', async () => {
+  //   //   const textValue = this.createInput.getInputValue();
+  //   //   const colorValue = this.colorPicker.getInputValue();
+  //   //   // const res = await helperRequest();
+  //   //   // console.log(colorValue);
+  //   //   // console.log(res);
+  //   //   const res = await this.carGarageApi.createCar(textValue, colorValue);
+  //   //   console.log(res);
+  //   //   /* const allCars = await this.carGarageApi.getCars(2);
+  //   //               console.log(allCars, `allCars`); */
+  //   //   this.garage.innerHTML = '';
+  //   //   await this.getCars();
+  //   //   this.createInput.clearInputValue();
+  //   //   this.colorPicker.clearInputValue();
+  //   // });
+  //   // this.updateButtonElement.addEventListener('click', () => {
+  //   //   /* const pikerValue = this.updateColorPicker.getInputValue();
+  //   //                     console.log(pikerValue); */
+  //   //   const carAnimation = document.querySelector('.car');
+  //   //   if (carAnimation instanceof HTMLElement && carAnimation) {
+  //   //     carAnimation.style.animationPlayState = 'paused';
+  //   //   }
+  //   // });
+  //   // this.raceStartButtonElement.addEventListener('click', async () => {
+  //   //   const raceResult = await Promise.all(
+  //   //     this.raceParty.map((raceMemberMethod) => raceMemberMethod.startMoveCar()),
+  //   //   );
+  //   //   console.log(raceResult.filter((raceMember) => !!raceMember));
+  //   // });
+  // }
 
-        main.append(controllerSection);
-        main.append(garageBlock);
+  // private async getCars(page = 1): Promise<void> {
+  //   const pageCars = await this.carGarageApi.getCars();
+  //   console.log(pageCars, `pageCars`);
+  //   this.raceParty.length = 0;
+  //   // const raceParty: RacePArtyType[] = [];
 
-        this.body.append(header);
-        this.body.append(main);
-    }
+  //   pageCars.forEach((carData) => {
+  //     console.log(carData, `carData`);
+  //     const equipmentProps = {
+  //       carColor: carData.color,
+  //       carName: carData.name,
+  //       id: carData.id,
+  //     };
 
-    private addEventListeners(): void {
-        this.createButtonElement.addEventListener('click', async () => {
-            const textValue = this.createInput.getInputValue();
-            const colorValue = this.colorPicker.getInputValue();
-            // const res = await helperRequest();
-            // console.log(colorValue);
-            // console.log(res);
-            const res = await this.carGarageApi.createCar(textValue, colorValue);
-            console.log(res);
-            /* const allCars = await this.carGarageApi.getCars(2);
-                  console.log(allCars, `allCars`); */
-            this.garage.innerHTML = '';
-            await this.getCars();
-
-            this.createInput.clearInputValue();
-            this.colorPicker.clearInputValue();
-        });
-
-        this.updateButtonElement.addEventListener('click', () => {
-            /* const pikerValue = this.updateColorPicker.getInputValue();
-                        console.log(pikerValue); */
-
-            const carAnimation = document.querySelector('.car');
-            if (carAnimation instanceof HTMLElement && carAnimation) {
-                carAnimation.style.animationPlayState = 'paused';
-            }
-        });
-
-        this.raceStartButtonElement.addEventListener('click', async () => {
-            const raceResult = await Promise.all(this.raceParty.map((raceMemberMethod) => raceMemberMethod.startMoveCar()))
-
-            console.log(raceResult.filter((raceMember) => !!raceMember));
-
-
-        });
-    }
-
-    private async getCars(page = 1): Promise<void> {
-        const pageCars = await this.carGarageApi.getCars();
-        console.log(pageCars, `pageCars`);
-        this.raceParty.length = 0;
-        // const raceParty: RacePArtyType[] = [];
-
-        pageCars.forEach((carData) => {
-            console.log(carData, `carData`);
-            const equipmentProps = {
-                carColor: carData.color,
-                carName: carData.name,
-                id: carData.id,
-            };
-
-            // console.log(`id ofCar ~~>`, equipmentProps.id, typeof equipmentProps.id);
-            const equipmentCar = new EquipmentCar(equipmentProps);
-            const car = equipmentCar.getCar();
-            this.raceParty.push(equipmentCar);
-            // this.membersRace.push(equipmentCar);
-            this.garage.append(car);
-        });
-        console.log(this.raceParty);
-    }
+  //     // console.log(`id ofCar ~~>`, equipmentProps.id, typeof equipmentProps.id);
+  //     const equipmentCar = new EquipmentCar(equipmentProps);
+  //     const car = equipmentCar.getCar();
+  //     this.raceParty.push(equipmentCar);
+  //     // this.membersRace.push(equipmentCar);
+  //     this.garage.append(car);
+  //   });
+  //   console.log(this.raceParty);
+  // }
 }

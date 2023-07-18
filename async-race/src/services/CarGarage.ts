@@ -22,6 +22,13 @@ export class CarGarage {
 
   private readonly DEFAULT_CAR_LIMIT = 7;
 
+  public async getCountCars(page = 1, limit = this.DEFAULT_CAR_LIMIT): Promise<number> {
+    const urlParams = `_page=${page}&_limit=${limit}`;
+
+    const response = await fetch(`${this.API_URL}?${urlParams}`);
+    return Number(response.headers.get('X-Total-Count'));
+  }
+
   public async getCars(page = 1, limit = this.DEFAULT_CAR_LIMIT): Promise<GetCarsType[]> {
     const urlParams = `_page=${page}&_limit=${limit}`;
     // let url: string;
