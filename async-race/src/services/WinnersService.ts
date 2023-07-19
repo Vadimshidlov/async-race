@@ -9,7 +9,7 @@ export type WinnersType = {
   time: number;
 };
 
-export class Winners {
+export class WinnersService {
   private readonly winnersUrl = 'http://127.0.0.1:3000/winners/';
 
   public async getWinners(

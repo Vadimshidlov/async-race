@@ -1,0 +1,40 @@
+.winners__block {
+  display: flex;
+  flex-direction: column;
+
+  .winners__title {
+    display: flex;
+    column-gap: 10px;
+  }
+
+  .winners__page-title {
+    display: flex;
+    column-gap: 10px;
+  }
+
+  .winners__table {
+    .winners__table-header {
+      display: flex;
+      column-gap: 30px;
+    }
+
+    .winners__table-body {
+      display: flex;
+      column-gap: 30px;
+    }
+
+  }
+}
+
+.winners__title-text {
+}
+
+.winners__page-title {
+}
+
+
+.winners__page-title-text {
+}
+
+
+

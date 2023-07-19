@@ -21,11 +21,20 @@
         align-items: center;
 
         .create-block__button {
+          //width: 75px;
+          //padding: 3px 5px 20px 5px;
+          //height: 22px;
+          //border-radius: 5px;
+          //font-size: 1rem;
+          //font-weight: 600;
+          //transition: all 0.5s;
+          //cursor: pointer;
+
           width: 75px;
-          padding: 3px 5px 20px 5px;
-          height: 22px;
+          padding: 3px 2px 17px 2px;
+          height: 20px;
           border-radius: 5px;
-          font-size: 1rem;
+          font-size: 0.9rem;
           font-weight: 600;
           transition: all 0.5s;
           cursor: pointer;
@@ -47,10 +56,10 @@
 
         .create-block__button {
           width: 75px;
-          padding: 4px 5px 19px 5px;
-          height: 24px;
+          padding: 3px 2px 17px 2px;
+          height: 20px;
           border-radius: 5px;
-          font-size: 1rem;
+          font-size: 0.9rem;
           font-weight: 600;
           transition: all 0.5s;
           cursor: pointer;
@@ -85,7 +94,8 @@
         right: 10%;
         bottom: -7px;
         width: 50px;
-        height: 100px;
+        height: 60px;
+
 
         @media (max-width: 650px) {
           right: 15%;

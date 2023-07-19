@@ -7,9 +7,10 @@
   .controller__block {
     display: flex;
     column-gap: 20px;
+    align-items: center;
 
     .create-block__input {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
     }
 
     .create-block__input__color-picker {
@@ -20,18 +21,17 @@
 
   .block-race {
     display: flex;
-    column-gap: 48px;
+    column-gap: 67px;
 
   }
 }
 
 .create-block__button {
-  width: 100px;
-  height: 19px;
-  font-size: 1rem;
-  color: black;
-  padding: 3px 5px 21px 5px;
+  width: 75px;
+  padding: 3px 2px 17px 2px;
+  height: 20px;
   border-radius: 5px;
+  font-size: 0.9rem;
   font-weight: 600;
   transition: all 0.5s;
   cursor: pointer;
