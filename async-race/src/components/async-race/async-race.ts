@@ -4,6 +4,7 @@ import createElement from '../element/element-creator';
 
 import { PageCOntroller } from '../PageController/PageController';
 import { Garage } from '../garage/Garage';
+import { WinnersTable } from '../winners/Winners';
 
 export type RacePArtyType = () => Promise<number>;
 
@@ -56,11 +57,14 @@ export class AsyncRace {
     this.toWinnersButton.addEventListener('click', () => {
       this.main.innerHTML = '';
       this.garageCurrentPage = this.garage.getGarageCurrentPage();
+      const winnersHtml = new WinnersTable().getWinnersHtml();
+      this.main.append(winnersHtml);
     });
 
     this.toGarageButton.addEventListener('click', () => {
       this.main.innerHTML = '';
-      this.main.append(new Garage(this.garageCurrentPage).getGarageHtml());
+      // this.main.append(new Garage(this.garageCurrentPage).getGarageHtml());
+      this.main.append(this.garageElement);
     });
   }
 

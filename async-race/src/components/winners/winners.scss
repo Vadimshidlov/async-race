@@ -5,36 +5,66 @@
   .winners__title {
     display: flex;
     column-gap: 10px;
+    font-size: 1.4rem;
   }
 
   .winners__page-title {
     display: flex;
     column-gap: 10px;
   }
+}
 
-  .winners__table {
-    .winners__table-header {
-      display: flex;
-      column-gap: 30px;
+.winners__table-header {
+  // display: flex;
+  // column-gap: 65px;
+  // font-size: 1.3rem;
+  // margin-bottom: 10px;
+}
+
+.winners__table {
+  // display: flex;
+  // flex-direction: column;
+
+  width: 80%;
+  margin-bottom: 20px;
+  border: 1px solid #dddddd;
+  border-collapse: collapse;
+
+  th {
+    font-weight: bold;
+    padding: 5px;
+    background: #efefef;
+    border: 1px solid #dddddd;
+    font-size: 1.2rem;
+  }
+
+  td {
+    border: 1px solid #dddddd;
+    padding: 5px;
+    text-align: center;
+    font-size: 1.3rem;
+  }
+
+  .winners__item {
+    // display: flex;
+    // column-gap: 40px;
+    // font-size: 1.3rem;
+    // align-items: center;
+
+    /* .winner__number {
+      margin-right: 41px;
+      margin-left: 27px;
     }
-
-    .winners__table-body {
-      display: flex;
-      column-gap: 30px;
+    .winner__car {
+      margin-right: 8px;
     }
-
+    .winner__name {
+      margin-right: 45px;
+    }
+    .winner__wins {
+      margin-right: 83px;
+    }
+    .winner__time {
+    } */
   }
 }
-
-.winners__title-text {
-}
-
-.winners__page-title {
-}
-
-
-.winners__page-title-text {
-}
-
-
-

@@ -128,8 +128,8 @@ export class EquipmentCar {
 
     this.returnCarButton.addEventListener('click', async () => {
       console.log('return');
-      this.car.setToStartPosition();
       await this.stopRaceMoveCar();
+      this.car.setToStartPosition();
       this.enableAllButtons();
       this.garageController.enableControllerButtons();
       this.returnCarButton.disabled = true;

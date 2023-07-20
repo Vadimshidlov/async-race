@@ -1,6 +1,6 @@
-export function getCarImage(color: string): string {
-    const car = `<svg version="1.0" xmlns="http://www.w3.org/2000/svg"
- width="140px" height="50px" viewBox="0 0 1280.000000 640.000000"
+export function getCarImage(color: string, width = 140, height = 50): string {
+  const car = `<svg version="1.0" xmlns="http://www.w3.org/2000/svg"
+ width="${width}px" height="${height}px" viewBox="0 0 1280.000000 640.000000"
  preserveAspectRatio="xMidYMid meet">
 <metadata>
 Created by potrace 1.15, written by Peter Selinger 2001-2017
@@ -99,7 +99,7 @@ l-15 -73 3006 7 c1653 4 3007 8 3009 9 1 1 -8 37 -20 81 -19 67 -22 105 -22
 <path d="M11033 1803 c-10 -3 -13 -47 -13 -169 0 -90 4 -164 8 -164 36 0 186
 61 239 98 16 10 -216 242 -234 235z"/>
 </g>
-</svg>`
+</svg>`;
 
-    return car
+  return car;
 }
