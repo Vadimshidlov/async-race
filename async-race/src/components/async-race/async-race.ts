@@ -36,23 +36,6 @@ export class AsyncRace {
     this.addEventListeners();
   }
 
-  // private addEventListeners(): void {
-  //     this.garageElement.addEventListener('click', (event: Event) => {
-  //         if (
-  //             /* event.target instanceof HTMLElement &&
-  //             (event.target.classList.contains('car-filed') ||
-  //                 event.target.parentElement?.classList.contains('car-filed')) */
-  //             event.target instanceof HTMLElement &&
-  //             (event.target.closest('.car-filed')
-  //                 /* ||
-  //                 event.target.parentElement?.closest('.car-filed')) */
-  //             )) {
-  //             event.stopPropagation();
-  //             console.log(event.target.id);
-  //         }
-  //     });
-  // }
-
   private addEventListeners(): void {
     this.toWinnersButton.addEventListener('click', () => {
       this.main.innerHTML = '';
@@ -63,7 +46,6 @@ export class AsyncRace {
 
     this.toGarageButton.addEventListener('click', () => {
       this.main.innerHTML = '';
-      // this.main.append(new Garage(this.garageCurrentPage).getGarageHtml());
       this.main.append(this.garageElement);
     });
   }
@@ -71,11 +53,6 @@ export class AsyncRace {
   public getHtmlPAge(): void {
     const header: HTMLElement = getHeader();
     header.append(this.pageControllerElement);
-    // const main = createElement({
-    //   tag: 'main',
-    //   classNames: ['main', '_container'],
-    //   text: '',
-    // });
 
     this.main.append(this.garageElement);
 

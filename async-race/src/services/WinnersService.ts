@@ -35,6 +35,11 @@ export class WinnersService {
   public async getWinner(id: number): Promise<WinnersType> {
     const response = await fetch(`${this.winnersUrl}${id}`);
 
+    // TODO network error?
+    if (!response.ok) {
+      throw Error('Winner is missing');
+    }
+
     return response.json();
   }
 

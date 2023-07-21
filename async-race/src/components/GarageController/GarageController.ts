@@ -11,11 +11,11 @@ export type CreateCarValuesType = {
 export class GarageController {
   private createInput: CreateInputElement = new CreateInputElement();
 
-  private readonly createInputElement: HTMLElement;
+  private readonly createInputElement: HTMLInputElement;
 
   private readonly updateInput: CreateInputElement = new CreateInputElement();
 
-  private readonly updateInputElement: HTMLElement;
+  private readonly updateInputElement: HTMLInputElement;
 
   private readonly createButtonElement: HTMLButtonElement = new CreateButtonElement(
     'Create',
@@ -52,6 +52,7 @@ export class GarageController {
     // this.updateButtonElement = this.updateButton.getElement();
     this.createColorPickerElement = this.createColorPicker.getElement();
     this.updateColorPickerElement = this.updateColorPicker.getElement();
+    this.disableUpdateInput();
   }
 
   public getControllerHtml(): HTMLElement {
@@ -78,6 +79,7 @@ export class GarageController {
       text: '',
     });
     this.updateButtonElement.disabled = true;
+    this.updateInputElement.disabled = true;
 
     updateBlock.append(
       this.updateInputElement,
@@ -91,16 +93,33 @@ export class GarageController {
       text: '',
     });
 
+    this.raceResetButtonElement.disabled = true;
+
     raceBlock.append(
       this.raceStartButtonElement,
       this.raceResetButtonElement,
       this.generateCarButtonElement,
     );
-    this.raceResetButtonElement.disabled = true;
 
     controllerSection.append(createBlock, updateBlock, raceBlock);
 
     return controllerSection;
+  }
+
+  public disableUpdateInput(): void {
+    this.updateInputElement.disabled = true;
+  }
+
+  public enableUpdateInput(): void {
+    this.updateInputElement.disabled = false;
+  }
+
+  public disableCreateInput(): void {
+    this.createInputElement.disabled = true;
+  }
+
+  public enableCreateInput(): void {
+    this.createInputElement.disabled = false;
   }
 
   public getCreateCarValues(): CreateCarValuesType {
@@ -166,7 +185,7 @@ export class GarageController {
     // this.raceResetButtonElement.disabled = false;
     this.generateCarButtonElement.disabled = false;
     this.createButtonElement.disabled = false;
-    // this.updateButtonElement.disabled = false;
+    this.updateButtonElement.disabled = true;
   }
 
   public setUpdateInputValue(value: string): void {

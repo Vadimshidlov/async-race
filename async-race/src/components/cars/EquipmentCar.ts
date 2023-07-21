@@ -6,7 +6,6 @@ import { Car, StartMoveResultType } from './car';
 import { GarageController } from '../GarageController/GarageController';
 import { CarGarage } from '../../services/CarGarage';
 
-const carSvg = require('../../assets/svg/car.svg');
 const flag = require('../../assets/svg/flag.svg');
 
 export type EquipmentPropsType = {
@@ -15,6 +14,7 @@ export type EquipmentPropsType = {
   id: number;
   garageController: GarageController;
   deletaCarsCallback: () => Promise<void>;
+  selectCarCallback: () => void;
 };
 
 export class EquipmentCar {
@@ -44,7 +44,16 @@ export class EquipmentCar {
 
   private deletaCarsCallback: () => Promise<void>;
 
-  constructor({ carColor, carName, id, garageController, deletaCarsCallback }: EquipmentPropsType) {
+  private selectCarCallback: () => void;
+
+  constructor({
+    carColor,
+    carName,
+    id,
+    garageController,
+    deletaCarsCallback,
+    selectCarCallback,
+  }: EquipmentPropsType) {
     this.equipmentCar = createElement({
       tag: 'div',
       classNames: ['car-filed'],
@@ -54,11 +63,8 @@ export class EquipmentCar {
     this.carName = carName;
     this.equipmentCar.id = this.carFieldId;
     this.deletaCarsCallback = deletaCarsCallback;
+    this.selectCarCallback = selectCarCallback;
 
-    // this.startCarButton = new CreateButtonElement('Start').getElement();
-    // this.returnCarButton = new CreateButtonElement('Return').getElement();
-    // this.selectCarButton = new CreateButtonElement('Select').getElement();
-    // this.removeCarButton = new CreateButtonElement('Remove').getElement();
     this.car = new Car(carColor, id, carName);
     this.carElement = this.car.getCar();
     this.carNameElement = createElement<HTMLSpanElement>({
@@ -92,8 +98,6 @@ export class EquipmentCar {
       text: '',
     });
 
-    // const driveButton = new CreateButtonElement('Start').getElement();
-    // const stopButton = new CreateButtonElement('Stop').getElement();
     stateControllersBtns.append(this.selectCarButton, this.removeCarButton, this.carNameElement);
     moveControllersBtns.append(this.startCarButton, this.returnCarButton);
     this.returnCarButton.disabled = true;
@@ -104,7 +108,6 @@ export class EquipmentCar {
       classNames: ['car-filed_road'],
       text: '',
     });
-    // const car = new Car().getCar();
     const flagImage = createElement({
       tag: 'img',
       classNames: ['car-filed__flag'],
@@ -137,19 +140,24 @@ export class EquipmentCar {
 
     this.selectCarButton.addEventListener('click', async () => {
       this.setSelectedState();
+      this.selectCarCallback();
+      this.garageController.enableUpdateInput();
       const garageControllerUpdateButton = this.garageController.getUpdateCarButton();
       this.garageController.setUpdateInputValue(this.carName);
       garageControllerUpdateButton.disabled = false;
       this.garageController.disableControllerButtons();
-      //   this.startCarButton.disabled = true;
-      //   this.selectCarButton.disabled = true;
       this.garageController.setUpdateSelectCarId(this.car.getCarId());
       this.garageController.setUpdateSelectCarName(this.carName);
+      this.garageController.disableCreateInput();
     });
 
     this.removeCarButton.addEventListener('click', async () => {
       await this.carGarageService.deleteCar(this.car.getCarId());
+      this.garageController.enableControllerButtons();
       this.deletaCarsCallback();
+      this.garageController.clearUpdateInputValues();
+      this.garageController.disableUpdateInput();
+      this.garageController.enableCreateInput();
     });
   }
 
@@ -162,14 +170,12 @@ export class EquipmentCar {
   }
 
   public disableAllButtons(): void {
-    // this.returnCarButton.disabled = true;
     this.selectCarButton.disabled = true;
     this.removeCarButton.disabled = true;
     this.startCarButton.disabled = true;
   }
 
   public enableAllButtons(): void {
-    // this.returnCarButton.disabled = false;
     this.selectCarButton.disabled = false;
     this.removeCarButton.disabled = false;
     this.startCarButton.disabled = false;
@@ -189,14 +195,14 @@ export class EquipmentCar {
     this.disableAllButtons();
     this.returnCarButton.disabled = false;
     const firstResultTime = await this.car.startMove();
-    // this.enableAllButtons();
-    // this.garageController.enableControllerButtons()
 
     return firstResultTime;
   }
 
   public setCarName(value: string): void {
     this.carNameElement.textContent = value;
+    // TODO ?
+    this.carName = value;
   }
 
   private setCarId(id: number): void {
@@ -217,5 +223,13 @@ export class EquipmentCar {
 
   public setCarToInitialPlace(): void {
     this.car.setToStartPosition();
+  }
+
+  public disableSelectButton(): void {
+    this.selectCarButton.disabled = true;
+  }
+
+  public enableSelectButton(): void {
+    this.selectCarButton.disabled = false;
   }
 }
