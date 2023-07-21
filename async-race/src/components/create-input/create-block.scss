@@ -11,18 +11,21 @@
 
     .create-block__input {
       font-size: 1.1rem;
+      transition: all 0.5s;
+    }
+
+    .create-block__input__failed {
+      border: 4px solid red;
     }
 
     .create-block__input__color-picker {
       border-radius: 4px;
     }
-
   }
 
   .block-race {
     display: flex;
     column-gap: 67px;
-
   }
 }
 

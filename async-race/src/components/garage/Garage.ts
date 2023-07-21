@@ -157,11 +157,17 @@ export class Garage {
     });
 
     this.createButtonElement.addEventListener('click', async () => {
+      // this.garageController.getCreateInput().required = true;
       const newCarData = this.garageController.getCreateCarValues();
+      if (newCarData.textValue === '') {
+        this.garageController.setCreateInputFailedState();
+        return;
+      }
       const responseNewCarData = await this.carGarageApi.createCar(
         newCarData.textValue,
         newCarData.colorValue,
       );
+
       const carsGarageCount = await this.carGarageApi.getCountCars();
       this.setGarageCarsCount(carsGarageCount);
       if (carsGarageCount > 7) {

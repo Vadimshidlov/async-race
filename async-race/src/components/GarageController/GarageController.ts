@@ -112,6 +112,8 @@ export class GarageController {
 
   public enableUpdateInput(): void {
     this.updateInputElement.disabled = false;
+    // this.updateInputElement.autofocus = true;
+    this.updateInputElement.focus();
   }
 
   public disableCreateInput(): void {
@@ -160,6 +162,10 @@ export class GarageController {
 
   public getGenerateCarButton(): HTMLButtonElement {
     return this.generateCarButtonElement;
+  }
+
+  public setCreateInputFailedState(): void {
+    this.createInput.setFailedState();
   }
 
   public clearCreateInputValues(): void {
