@@ -1,210 +1,296 @@
-import { CarGarage } from '../../services/CarGarage';
-import { WinnersService } from '../../services/WinnersService';
+import {GarageService} from '../../services/GarageService';
+import {GetWinnersPropsType, WinnersService} from '../../services/WinnersService';
 import createElement from '../element/element-creator';
-import { WinnerDataType, WinnersItem } from './WinnerItem';
+import {WinnerDataType, WinnersItem} from './WinnerItem';
 import './winners.scss';
+import {CreateButtonElement} from "../create-input/create-button";
 
 export class WinnersTable {
-  private winnersBlock: HTMLElement = createElement({
-    tag: 'section',
-    classNames: ['winners-block'],
-    text: '',
-  });
-
-  private winnersTable: HTMLElement = createElement({
-    tag: 'table',
-    classNames: ['winners__table'],
-    text: '',
-  });
-
-  private winnersTableBody = createElement({
-    tag: 'tbody',
-    classNames: ['winners__table-body'],
-    text: '',
-  });
-
-  private winnersService = new WinnersService();
-
-  private garageService = new CarGarage();
-
-  private resultWinnersDataList: WinnerDataType[] = [];
-
-  constructor() {
-    this.configureView();
-    // this.prepareWinnersData();
-    this.addWinners();
-    // this.addWinners();
-  }
-
-  private configureView(): void {
-    const winnersTitleBlock: HTMLElement = createElement({
-      tag: 'div',
-      classNames: ['winners__title'],
-      text: '',
+    private winnersBlock: HTMLElement = createElement({
+        tag: 'section',
+        classNames: ['winners-block'],
+        text: '',
     });
 
-    const winnersTitle: HTMLElement = createElement({
-      tag: 'h1',
-      classNames: ['winners__title-text'],
-      text: 'Winners (6)',
-    });
-    winnersTitleBlock.append(winnersTitle);
-
-    const winnersTitlePageBlock: HTMLElement = createElement({
-      tag: 'div',
-      classNames: ['winners__page-title', 'page-title'],
-      text: '',
+    private winnersTable: HTMLElement = createElement({
+        tag: 'table',
+        classNames: ['winners__table'],
+        text: '',
     });
 
-    const winnersTitlePage: HTMLElement = createElement({
-      tag: 'h2',
-      classNames: ['page-title__text'],
-      text: 'Page: 2',
-    });
-    winnersTitlePageBlock.append(winnersTitlePage);
-
-    const winnersTableHeaderBlock: HTMLElement = createElement({
-      tag: 'thead',
-      classNames: ['winners__table-header', 'table-header'],
-      text: '',
+    private winnersTableBody = createElement({
+        tag: 'tbody',
+        classNames: ['winners__table-body'],
+        text: '',
     });
 
-    const TableHeaderTr = createElement({
-      tag: 'tr',
-      classNames: ['winners__table-header', 'table-header'],
-      text: '',
+    private winnersTitle: HTMLElement = createElement({
+        tag: 'span',
+        classNames: ['winners__title-text'],
+        text: 'Winners (1)',
     });
 
-    winnersTableHeaderBlock.append(TableHeaderTr);
 
-    const winnerNumberHeader = createElement({
-      tag: 'th',
-      classNames: ['table-header__number'],
-      text: `Number`,
+    private winnersTitlePage: HTMLElement = createElement({
+        tag: 'span',
+        classNames: ['page-title__text'],
+        text: 'Page: 1',
     });
 
-    const winnerCarHeader = createElement({
-      tag: 'th',
-      classNames: ['table-header__car'],
-      text: 'Car',
+    private winnerWinsHeader = createElement({
+        tag: 'th',
+        classNames: ['table-header__wins'],
+        text: `Wins`,
     });
 
-    const winnerNameHeader = createElement({
-      tag: 'th',
-      classNames: ['table-header__name'],
-      text: 'Name',
+    private winnerTimeHeader = createElement({
+        tag: 'th',
+        classNames: ['table-header__time'],
+        text: `Best time (sec)`,
     });
 
-    const winnerWinsHeader = createElement({
-      tag: 'th',
-      classNames: ['table-header__wins'],
-      text: `Wins`,
-    });
+    private winnersService = new WinnersService();
 
-    const winnerTimeHeader = createElement({
-      tag: 'th',
-      classNames: ['table-header__time'],
-      text: `Best time (sec)`,
-    });
+    private garageService = new GarageService();
 
-    TableHeaderTr.append(
-      winnerNumberHeader,
-      winnerCarHeader,
-      winnerNameHeader,
-      winnerWinsHeader,
-      winnerTimeHeader,
-    );
+    private resultWinnersDataList: WinnerDataType[] = [];
 
-    this.winnersTable.append(winnersTableHeaderBlock, this.winnersTableBody);
+    private prevPageButtonElement: HTMLButtonElement = new CreateButtonElement('Prev').getElement();
 
-    /* winnersTableHeaderBlock.append(
-      winnerNumberHeader,
-      winnerCarHeader,
-      winnerNameHeader,
-      winnerWinsHeader,
-      winnerTimeHeader,
-    ); */
+    private nextPageButtonElement: HTMLButtonElement = new CreateButtonElement('Next').getElement();
 
-    this.winnersBlock.append(winnersTitleBlock, winnersTitlePageBlock, this.winnersTable);
-  }
+    private winnersCurrentPage = 1;
 
-  public getWinnersHtml(): HTMLElement {
-    /* const renderWinners = async (): Promise<void> => {
-      await this.addWinners();
-    };
-    renderWinners(); */
-    return this.winnersBlock;
-  }
+    private winnersCount = 1;
 
-  private async prepareWinnersData(): Promise<void> {
-    const winnersDataList = await this.winnersService.getWinners();
-    const winnersIdList = winnersDataList.map((winnerData) => winnerData.id);
-    const carParamsList = await Promise.all(
-      winnersIdList.map((winnerData) => this.garageService.getCar(winnerData)),
-    );
-    const res: WinnerDataType[] = [];
-    carParamsList.forEach((carParams, firstIndex) => {
-      winnersDataList.forEach((winnerData) => {
-        if (carParams.id === winnerData.id) {
-          this.resultWinnersDataList.push({
-            wins: winnerData.wins,
-            time: winnerData.time,
-            color: carParams.color,
-            indexNumber: firstIndex + 1,
-            name: carParams.name,
-          });
+    private WINNERS_PAGE_LIMIT = 10;
+
+    constructor() {
+        this.configureView();
+        // this.prepareWinnersData();
+        this.addWinners({
+            page: this.winnersCurrentPage,
+            limit: this.WINNERS_PAGE_LIMIT,
+            sort: 'time',
+            order: 'ASC'
+        });
+        // this.addWinners();
+        this.addEventListeners()
+    }
+
+    private configureView(): void {
+        const winnersInfoBlock: HTMLElement = createElement({
+            tag: 'div',
+            classNames: ['winners__info'],
+            text: '',
+        });
+
+
+        winnersInfoBlock.append(this.winnersTitle, this.winnersTitlePage);
+
+
+        // winnersTitlePageBlock.append(winnersTitlePage);
+
+        const winnersTableHeaderBlock: HTMLElement = createElement({
+            tag: 'thead',
+            classNames: ['winners__table-header', 'table-header'],
+            text: '',
+        });
+
+        const TableHeaderTr = createElement({
+            tag: 'tr',
+            classNames: ['winners__table-header', 'table-header'],
+            text: '',
+        });
+
+        winnersTableHeaderBlock.append(TableHeaderTr);
+
+        const winnerNumberHeader = createElement({
+            tag: 'th',
+            classNames: ['table-header__number'],
+            text: `Number`,
+        });
+
+        const winnerCarHeader = createElement({
+            tag: 'th',
+            classNames: ['table-header__car'],
+            text: 'Car',
+        });
+
+        const winnerNameHeader = createElement({
+            tag: 'th',
+            classNames: ['table-header__name'],
+            text: 'Name',
+        });
+
+        /* const winnerWinsHeader = createElement({
+            tag: 'th',
+            classNames: ['table-header__wins'],
+            text: `Wins`,
+        });
+
+        const winnerTimeHeader = createElement({
+            tag: 'th',
+            classNames: ['table-header__time'],
+            text: `Best time (sec)`,
+        }); */
+
+        TableHeaderTr.append(
+            winnerNumberHeader,
+            winnerCarHeader,
+            winnerNameHeader,
+            this.winnerWinsHeader,
+            this.winnerTimeHeader,
+        );
+
+        this.winnersTable.append(winnersTableHeaderBlock, this.winnersTableBody);
+
+        const winnersPageControllerBlock = createElement({
+            tag: 'div',
+            classNames: ['winners__page-controller'],
+            text: ``,
+        });
+
+        winnersPageControllerBlock.append(this.prevPageButtonElement, this.nextPageButtonElement);
+
+        this.winnersBlock.append(winnersInfoBlock, /* winnersTitlePageBlock, */ this.winnersTable, winnersPageControllerBlock);
+    }
+
+    public getWinnersHtml(): HTMLElement {
+        return this.winnersBlock;
+    }
+
+    /* private async prepareWinnersData(): Promise<void> {
+        const winnersDataList = await this.winnersService.getWinners();
+        const winnersIdList = winnersDataList.map((winnerData) => winnerData.id);
+        const carParamsList = await Promise.all(
+            winnersIdList.map((winnerData) => this.garageService.getCar(winnerData)),
+        );
+        const res: WinnerDataType[] = [];
+        carParamsList.forEach((carParams, firstIndex) => {
+            winnersDataList.forEach((winnerData) => {
+                if (carParams.id === winnerData.id) {
+                    this.resultWinnersDataList.push({
+                        wins: winnerData.wins,
+                        time: winnerData.time,
+                        color: carParams.color,
+                        indexNumber: firstIndex + 1,
+                        name: carParams.name,
+                    });
+                }
+            });
+        });
+
+        // console.log(res);
+    } */
+
+    private async disableControllerButtons(): Promise<void> {
+        const winnersCount = await this.winnersService.getWinnersCount()
+        if (this.winnersCurrentPage === 1) {
+            this.prevPageButtonElement.disabled = true;
+        } else {
+            this.prevPageButtonElement.disabled = false;
         }
-      });
-    });
 
-    // console.log(res);
-  }
-
-  public async addWinners(): Promise<void> {
-    /* const winnersData = await this.winnersService.getWinners();
-    winnersData.forEach(async (winnerData, index) => {
-      const winnerId = winnerData.id;
-      const carData = await this.garageService.getCar(winnerId);
-
-      const winnersProps = {
-        // id: winnerId,
-        wins: winnerData.wins,
-        time: winnerData.time,
-        color: carData.color,
-        indexNumber: index + 1,
-        name: carData.name,
-      };
-
-      const winner = new WinnersItem(winnersProps);
-      const winnerElement = winner.getWinnerHtml();
-      this.winnersTableBody.append(winnerElement);
-    }); */
-    const winnersDataList = await this.winnersService.getWinners();
-    const winnersIdList = winnersDataList.map((winnerData) => winnerData.id);
-    const carParamsList = await Promise.all(
-      winnersIdList.map((winnerData) => this.garageService.getCar(winnerData)),
-    );
-    const res: WinnerDataType[] = [];
-    carParamsList.forEach((carParams, firstIndex) => {
-      winnersDataList.forEach((winnerData) => {
-        if (carParams.id === winnerData.id) {
-          res.push({
-            wins: winnerData.wins,
-            time: winnerData.time,
-            color: carParams.color,
-            indexNumber: firstIndex + 1,
-            name: carParams.name,
-          });
+        if (this.winnersCurrentPage === Math.ceil(winnersCount / 10)) {
+            this.nextPageButtonElement.disabled = true
+        } else {
+            this.nextPageButtonElement.disabled = false;
         }
-      });
-    });
+    }
 
-    console.log(this.resultWinnersDataList, `this.resultWinnersDataList`);
-    res.forEach((resultWinnerData) => {
-      console.log(resultWinnerData, `123`);
-      const winner = new WinnersItem(resultWinnerData);
-      const winnerElement = winner.getWinnerHtml();
-      this.winnersTableBody.append(winnerElement);
-    });
-  }
+    public async addWinners(
+        {
+            page = this.winnersCurrentPage,
+            limit = this.WINNERS_PAGE_LIMIT,
+            sort = 'time',
+            order = 'ASC'
+        }: GetWinnersPropsType
+    ): Promise<void> {
+        await this.disableControllerButtons()
+
+        const winnersCount = await this.winnersService.getWinnersCount()
+        this.setCurrentPageAndCount(winnersCount, this.winnersCurrentPage)
+
+
+        const winnersDataList = await this.winnersService.getWinners({page, limit, sort, order});
+        const winnersIdList = winnersDataList.map((winnerData) => winnerData.id);
+        const carParamsList = await Promise.all(
+            winnersIdList.map((winnerData) => this.garageService.getCar(winnerData)),
+        );
+        const res: WinnerDataType[] = [];
+        carParamsList.forEach((carParams, firstIndex) => {
+            winnersDataList.forEach((winnerData) => {
+                if (carParams.id === winnerData.id) {
+                    const carCurrenNumber = (this.winnersCurrentPage * 10 - 10) + firstIndex + 1
+                    res.push({
+                        wins: winnerData.wins,
+                        time: winnerData.time,
+                        color: carParams.color,
+                        indexNumber: carCurrenNumber,
+                        name: carParams.name,
+                    });
+                }
+            });
+        });
+
+        // console.log(this.resultWinnersDataList, `this.resultWinnersDataList`);
+        res.forEach((resultWinnerData) => {
+            // console.log(resultWinnerData, `123`);
+            const winner = new WinnersItem(resultWinnerData);
+            const winnerElement = winner.getWinnerHtml();
+            this.winnersTableBody.append(winnerElement);
+        });
+    }
+
+    private setCurrentPageAndCount(winnerCount: number, pageNumber: number): void {
+        this.winnersTitle.textContent = `Winners (${winnerCount})`
+        this.winnersTitlePage.textContent = `Page: ${pageNumber}`
+    }
+
+    private addEventListeners(): void {
+        this.nextPageButtonElement.addEventListener('click', async () => {
+            this.winnersCurrentPage += 1;
+            this.winnersTableBody.innerHTML = '';
+            await this.addWinners({
+                page: this.winnersCurrentPage,
+                limit: this.WINNERS_PAGE_LIMIT,
+                sort: 'time',
+                order: 'ASC'
+            })
+        })
+
+        this.prevPageButtonElement.addEventListener('click', async () => {
+            this.winnersCurrentPage -= 1;
+            this.winnersTableBody.innerHTML = '';
+            await this.addWinners({
+                page: this.winnersCurrentPage,
+                limit: this.WINNERS_PAGE_LIMIT,
+                sort: 'time',
+                order: 'ASC'
+            })
+        })
+
+        this.winnerWinsHeader.addEventListener('click', async () => {
+            console.log(this.winnersCurrentPage, `currPage`);
+            this.winnersTableBody.innerHTML = '';
+            await this.addWinners({
+                page: this.winnersCurrentPage,
+                limit: this.WINNERS_PAGE_LIMIT,
+                sort: 'wins',
+                order: 'DESC'
+            })
+        })
+
+        this.winnerTimeHeader.addEventListener('click', async () => {
+            console.log(this.winnersCurrentPage, `currPage`);
+            this.winnersTableBody.innerHTML = '';
+            await this.addWinners({
+                page: this.winnersCurrentPage,
+                limit: this.WINNERS_PAGE_LIMIT,
+                sort: 'time',
+                order: 'ACS'
+            })
+        })
+    }
 }

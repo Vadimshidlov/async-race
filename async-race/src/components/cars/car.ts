@@ -1,4 +1,4 @@
-import { CarEngine } from '../../services/CarEngine';
+import { EngineService } from '../../services/EngineService';
 import createElement from '../element/element-creator';
 import { getCarImage } from './get-car-image';
 import { getEndpoint } from '../utils/getEmdpoint';
@@ -14,7 +14,7 @@ export class Car {
 
   private readonly animationClass = 'car__drive';
 
-  private carEngine = new CarEngine();
+  private carEngine = new EngineService();
 
   private readonly carId: number;
 

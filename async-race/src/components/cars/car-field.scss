@@ -104,38 +104,41 @@
     }
   }
 
-  .winner__popup {
-    background: powderblue;
-    position: absolute;
-    width: 57%;
-    height: 25%;
-    top: 16%;
-    left: 20%;
-    border-radius: 10px;
-    padding: 10px;
-    font-size: 1.3rem;
+  // .winner__popup {
+  //   display: flex;
+  //   justify-content: center;
+  //   align-items: center;
+  //   background: powderblue;
+  //   position: absolute;
+  //   width: 57%;
+  //   height: 156px;
+  //   top: -122%;
+  //   left: 36%;
+  //   border-radius: 10px;
+  //   padding: 10px;
+  //   font-size: 1.8rem;
 
-    .popup__mesage {
-    }
+  //   .popup__mesage {
+  //   }
 
-    .popup__button {
-      position: absolute;
-      top: 8%;
-      left: 93%;
-      background: transparent;
-      border: 1px solid black;
-      border-radius: 50%;
-      width: 20px;
-      height: 20px;
-      cursor: pointer;
-      transition: all 0.5s;
+  //   .popup__button {
+  //     position: absolute;
+  //     top: 8%;
+  //     left: 93%;
+  //     background: transparent;
+  //     border: 1px solid black;
+  //     border-radius: 50%;
+  //     width: 20px;
+  //     height: 20px;
+  //     cursor: pointer;
+  //     transition: all 0.5s;
 
-      &:hover {
-        border: 1px solid rebeccapurple;
-        background-color: #e15c21;
-      }
-    }
-  }
+  //     &:hover {
+  //       border: 1px solid rebeccapurple;
+  //       background-color: #e15c21;
+  //     }
+  //   }
+  // }
 }
 
 .block-garage__page-controller {

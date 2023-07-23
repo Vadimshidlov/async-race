@@ -15,7 +15,7 @@ export type UpdateCarType = {
   id: number;
 };
 
-export class CarGarage {
+export class GarageService {
   private readonly garageUrl = 'http://127.0.0.1:3000/garage/';
 
   private readonly API_URL = 'http://127.0.0.1:3000/garage/';

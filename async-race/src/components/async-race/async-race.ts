@@ -2,61 +2,65 @@ import getHeader from '../header/header';
 import '../../styles.scss';
 import createElement from '../element/element-creator';
 
-import { PageCOntroller } from '../PageController/PageController';
-import { Garage } from '../garage/Garage';
-import { WinnersTable } from '../winners/Winners';
+import {PageCOntroller} from '../PageController/PageController';
+import {Garage} from '../garage/Garage';
+import {WinnersTable} from '../winners/Winners';
 
 export type RacePArtyType = () => Promise<number>;
 
 export class AsyncRace {
-  private body = document.body;
+    private body = document.body;
 
-  private garageCurrentPage = 1;
+    private garageCurrentPage = 1;
 
-  private garage = new Garage(this.garageCurrentPage);
+    private garage = new Garage(this.garageCurrentPage);
 
-  private garageElement = this.garage.getGarageHtml();
+    private garageElement = this.garage.getGarageHtml();
 
-  private pageController = new PageCOntroller();
+    private pageController = new PageCOntroller();
 
-  private pageControllerElement = this.pageController.getPageControlleHTML();
+    private pageControllerElement = this.pageController.getPageControlleHTML();
 
-  private toGarageButton = this.pageController.getGarageButton();
+    private toGarageButton = this.pageController.getGarageButton();
 
-  private toWinnersButton = this.pageController.getWinnersButton();
+    private toWinnersButton = this.pageController.getWinnersButton();
 
-  private main = createElement({
-    tag: 'main',
-    classNames: ['main', '_container'],
-    text: '',
-  });
+    private winnersHTML: HTMLElement | null = null;
 
-  constructor() {
-    this.getHtmlPAge();
-    this.addEventListeners();
-  }
-
-  private addEventListeners(): void {
-    this.toWinnersButton.addEventListener('click', () => {
-      this.main.innerHTML = '';
-      this.garageCurrentPage = this.garage.getGarageCurrentPage();
-      const winnersHtml = new WinnersTable().getWinnersHtml();
-      this.main.append(winnersHtml);
+    private main = createElement({
+        tag: 'main',
+        classNames: ['main', '_container'],
+        text: '',
     });
 
-    this.toGarageButton.addEventListener('click', () => {
-      this.main.innerHTML = '';
-      this.main.append(this.garageElement);
-    });
-  }
+    constructor() {
+        this.getHtmlPAge();
+        this.addEventListeners();
+    }
 
-  public getHtmlPAge(): void {
-    const header: HTMLElement = getHeader();
-    header.append(this.pageControllerElement);
+    private addEventListeners(): void {
+        this.toWinnersButton.addEventListener('click', () => {
+            this.main.innerHTML = '';
+            this.garageCurrentPage = this.garage.getGarageCurrentPage();
+            if (!this.winnersHTML) {
+                this.winnersHTML = new WinnersTable().getWinnersHtml();
+            }
+            this.main.append(this.winnersHTML);
+        });
 
-    this.main.append(this.garageElement);
+        this.toGarageButton.addEventListener('click', () => {
+            this.main.innerHTML = '';
+            this.main.append(this.garageElement);
+        });
+    }
 
-    this.body.append(header);
-    this.body.append(this.main);
-  }
+    public getHtmlPAge(): void {
+        const header: HTMLElement = getHeader();
+        header.append(this.pageControllerElement);
+
+        this.main.append(this.garageElement);
+
+        this.body.append(header);
+        this.body.append(this.main);
+    }
 }

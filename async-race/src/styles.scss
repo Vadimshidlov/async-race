@@ -48,7 +48,8 @@ body {
   background: #fafafa;
   font-family: Monaco, sans-serif;
   font-weight: 500;
-  background: #abadad;
+  // background: #abadad;
+  background: #238a8ab8;
   overflow-x: hidden;
 }
 
@@ -70,14 +71,58 @@ body {
 .garage__block {
   .block-garage__info {
     display: flex;
+    flex-direction: column;
     gap: 10px;
     margin-bottom: 20px;
-    font-size: 1.4rem;
+    font-size: 1.5rem;
 
     .block-garage__title {
     }
 
+    .block-garage__pages {
+    }
+
     .block-garage__count {
+    }
+  }
+}
+
+main {
+  position: relative;
+
+  .winner__popup {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: powderblue;
+    position: absolute;
+    width: 57%;
+    height: 113px;
+    top: -8%;
+    left: 21%;
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 1.8rem;
+
+    .popup__mesage {
+    }
+
+    .popup__button {
+      position: absolute;
+      top: 8%;
+      left: 93%;
+      background: transparent;
+      border: 1px solid black;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      transition: all 0.5s;
+
+      &:hover {
+        border: 1px solid rebeccapurple;
+        background-color: #e15c21;
+      }
     }
   }
 }

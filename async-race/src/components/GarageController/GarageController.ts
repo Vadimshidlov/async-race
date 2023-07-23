@@ -124,6 +124,14 @@ export class GarageController {
     this.createInputElement.disabled = false;
   }
 
+  public disableRaceStartButton(): void {
+    this.raceStartButtonElement.disabled = true;
+  }
+
+  public enableRaceStartButton(): void {
+    this.raceStartButtonElement.disabled = false;
+  }
+
   public getCreateCarValues(): CreateCarValuesType {
     const textValue = this.createInput.getInputValue();
     const colorValue = this.createColorPicker.getInputValue();
@@ -168,6 +176,10 @@ export class GarageController {
     this.createInput.setFailedState();
   }
 
+  public setUpdateInputFailedState(): void {
+    this.updateInput.setFailedState();
+  }
+
   public clearCreateInputValues(): void {
     this.createColorPicker.clearInputValue();
     this.createInput.clearInputValue();
@@ -194,8 +206,9 @@ export class GarageController {
     this.updateButtonElement.disabled = true;
   }
 
-  public setUpdateInputValue(value: string): void {
-    this.updateInput.setInputValue(value);
+  public setUpdateInputValue(valueName: string, valueColor: string): void {
+    this.updateInput.setInputValue(valueName);
+    this.updateColorPicker.setColorPickerValue(valueColor);
   }
 
   public setUpdateSelectCarId(id: number): void {

@@ -1,81 +1,95 @@
 export type StartEngineType = {
-  velocity: string;
-  distance: string;
+    velocity: string;
+    distance: string;
 };
 
 export type WinnersType = {
-  id: number;
-  wins: number;
-  time: number;
+    id: number;
+    wins: number;
+    time: number;
 };
 
+export type GetWinnersPropsType = {
+    page: number,
+    limit: number,
+    sort: string,
+    order: string,
+}
+
 export class WinnersService {
-  private readonly winnersUrl = 'http://127.0.0.1:3000/winners/';
+    private readonly WINNERS_URL = 'http://127.0.0.1:3000/winners';
 
-  public async getWinners(
-    page?: number,
-    limit?: number,
-    sort?: string,
-    order?: string,
-  ): Promise<WinnersType[]> {
-    let url: string;
+    private DEFAULT_WINNERS_LIMIT = 10
 
-    if (page && limit && sort && order) {
-      // url = `http://127.0.0.1:3000/winners/_page=${page}&_limit=${limit}&_sort=${sort}&_order=${order}`;
-      url = `${this.winnersUrl}_page=${page}&_limit=${limit}&_sort=${sort}&_order=${order}`;
-    } else {
-      url = this.winnersUrl;
+    public async getWinnersCount(page = 1, limit = this.DEFAULT_WINNERS_LIMIT): Promise<number> {
+        const urlParams = `_page=${page}&_limit=${limit}`;
+
+        const response = await fetch(`${this.WINNERS_URL}?${urlParams}`);
+        return Number(response.headers.get('X-Total-Count'));
     }
 
-    const response = await fetch(url);
+    public async getWinners(
+        {
+            page = 1,
+            limit = this.DEFAULT_WINNERS_LIMIT,
+            sort = 'time',
+            order = 'ASC',
+        }: GetWinnersPropsType
+    ): Promise<WinnersType[]> {
+        const URL_PARAMS = `_page=${page}&_limit=${limit}&_sort=${sort}&_order=${order}`;
+        const response = await fetch(`${this.WINNERS_URL}?${URL_PARAMS}`);
 
-    return response.json();
-  }
-
-  public async getWinner(id: number): Promise<WinnersType> {
-    const response = await fetch(`${this.winnersUrl}${id}`);
-
-    // TODO network error?
-    if (!response.ok) {
-      throw Error('Winner is missing');
+        return response.json();
     }
 
-    return response.json();
-  }
+    public async getWinner(id: number): Promise<WinnersType> {
+        const response = await fetch(`${this.WINNERS_URL}/${id}`);
 
-  public async createWinner(id: number, wins: number, time: number): Promise<StartEngineType> {
-    const response = await fetch(this.winnersUrl, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-      body: JSON.stringify({
-        id,
-        wins,
-        time,
-      }),
-    });
+        // TODO network error?
+        if (!response.ok) {
+            throw Error('This machine has never been a winner');
+        }
 
-    return response.json();
-  }
+        return response.json();
+    }
 
-  public async deleteWinner(id: number): Promise<object> {
-    const response = await fetch(`${this.winnersUrl}${id}`, {
-      method: 'DELETE',
-    });
+    public async createWinner(id: number, wins: number, time: number): Promise<StartEngineType> {
+        const response = await fetch(this.WINNERS_URL, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            method: 'POST',
+            body: JSON.stringify({
+                id,
+                wins,
+                time,
+            }),
+        });
 
-    return response.json();
-  }
+        return response.json();
+    }
 
-  public async updateWinner(id: number, wins: number, time: number): Promise<object> {
-    const response = await fetch(`${this.winnersUrl}${id}`, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      method: 'PUT',
-      body: JSON.stringify({ wins, time }),
-    });
+    public async deleteWinner(id: number): Promise<object> {
+        const response = await fetch(`${this.WINNERS_URL}/${id}`, {
+            method: 'DELETE',
+        });
 
-    return response.json();
-  }
+        // if (!response.ok) {
+        //     throw Error('The remote machine has never been a winner');
+        // }
+
+        return response.json();
+    }
+
+    public async updateWinner(id: number, wins: number, time: number): Promise<object> {
+        const response = await fetch(`${this.WINNERS_URL}/${id}`, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            method: 'PUT',
+            body: JSON.stringify({wins, time}),
+        });
+
+        return response.json();
+    }
 }

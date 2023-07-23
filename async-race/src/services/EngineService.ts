@@ -7,7 +7,7 @@ export type StartDriveType = {
     success: boolean;
 };
 
-export class CarEngine {
+export class EngineService {
     private readonly engineUrl = '/engine';
 
     public async startEgine(id: number): Promise<StartEngineType> {
