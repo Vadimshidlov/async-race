@@ -47,7 +47,7 @@ export class EquipmentCar {
 
     private readonly selectCarCallback: () => void;
 
-    private readonly carColor: string;
+    private carColor: string;
 
     private winnerService = new WinnersService();
 
@@ -243,6 +243,8 @@ export class EquipmentCar {
 
     public setCarColor(value: string): void {
         this.car.setCarColor(value);
+        // TODO ?
+        this.carColor = value;
     }
 
     public setCarToInitialPlace(): void {

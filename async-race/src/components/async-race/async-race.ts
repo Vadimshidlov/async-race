@@ -15,6 +15,10 @@ export class AsyncRace {
 
     private garage = new Garage(this.garageCurrentPage);
 
+    private winnersCurrentPage = 1;
+
+    private winnersTable = new WinnersTable(this.winnersCurrentPage)
+
     private garageElement = this.garage.getGarageHtml();
 
     private pageController = new PageCOntroller();
@@ -25,7 +29,7 @@ export class AsyncRace {
 
     private toWinnersButton = this.pageController.getWinnersButton();
 
-    private winnersHTML: HTMLElement | null = null;
+    private winnersHTML: HTMLElement = new WinnersTable(this.winnersCurrentPage).getWinnersHtml();
 
     private main = createElement({
         tag: 'main',
@@ -42,13 +46,19 @@ export class AsyncRace {
         this.toWinnersButton.addEventListener('click', () => {
             this.main.innerHTML = '';
             this.garageCurrentPage = this.garage.getGarageCurrentPage();
-            if (!this.winnersHTML) {
-                this.winnersHTML = new WinnersTable().getWinnersHtml();
-            }
+
+            this.winnersHTML = new WinnersTable(this.winnersCurrentPage).getWinnersHtml();
+            this.winnersTable.addWinners({
+                page: this.winnersCurrentPage,
+                limit: 10,
+                sort: 'time',
+                order: 'ASC'
+            })
             this.main.append(this.winnersHTML);
         });
 
         this.toGarageButton.addEventListener('click', () => {
+            this.winnersCurrentPage = this.winnersTable.getWinnersCurrentPage()
             this.main.innerHTML = '';
             this.main.append(this.garageElement);
         });

@@ -13,6 +13,12 @@ export type NewCarDataType = {
     color: string;
 };
 
+export type CompareWinnerResultType = {
+    time: number;
+    winsCount: number
+}
+
+
 export type WinnerPropsDataType = {
     carId: number;
     carName: string;
@@ -65,6 +71,8 @@ export class Garage {
     private winnerService = new WinnersService();
 
     private popupMessage: HTMLElement | null = null;
+
+    private DELTA_INDEX_NUMBER = 1;
 
     constructor(garageCurrentPage: number) {
         this.garageCurrentPage = garageCurrentPage;
@@ -253,26 +261,40 @@ export class Garage {
         });
     }
 
+    private compareWinnerResult(previousTime: number, currentTime: number, winsCount: number): CompareWinnerResultType {
+        const currentWinnerTime =
+            previousTime < currentTime
+                ? previousTime
+                : currentTime;
+        const currentWinnerWins = winsCount + this.DELTA_INDEX_NUMBER;
+
+        return {time: currentWinnerTime, winsCount: currentWinnerWins}
+    }
+
     private async createWinner(winnerPropsData: WinnerPropsDataType): Promise<void> {
         const winnerId = winnerPropsData.carId;
         const winnerTime = winnerPropsData.roadTime;
 
         try {
-            const previusWinnerResult = await this.winnerService.getWinner(winnerId);
-            const currentWinnerTime =
-                previusWinnerResult.time < winnerPropsData.roadTime
-                    ? previusWinnerResult.time
+            const previousWinnerResult = await this.winnerService.getWinner(winnerId);
+            const bestWinnerResult = this.compareWinnerResult(previousWinnerResult.time, winnerPropsData.roadTime, previousWinnerResult.wins)
+            /* const currentWinnerTime =
+                previousWinnerResult.time < winnerPropsData.roadTime
+                    ? previousWinnerResult.time
                     : winnerPropsData.roadTime;
-            const currentWinnerWins = previusWinnerResult.wins + 1;
+            const currentWinnerWins = previousWinnerResult.wins + 1; */
 
-            const resultCreateWinner = await this.winnerService.updateWinner(
+            /* const resultCreateWinner =  */
+            await this.winnerService.updateWinner(
                 winnerId,
-                currentWinnerWins,
-                currentWinnerTime,
+                bestWinnerResult.winsCount,
+                bestWinnerResult.time
+                /* currentWinnerWins,
+                currentWinnerTime, */
             );
             // console.log(resultCreateWinner);
         } catch (error) {
-            this.winnerService.createWinner(winnerId, 1, winnerTime);
+            await this.winnerService.createWinner(winnerId, 1, winnerTime);
         }
     }
 
@@ -365,8 +387,8 @@ export class Garage {
     }
 
     private async updateCar(): Promise<void> {
-        const updateValues = this.garageController.getUpdateCarValues();
         const updateCarId = this.garageController.getUpdateSelectCarId();
+        const updateValues = this.garageController.getUpdateCarValues();
         const updateCarName = updateValues.textValue;
         const updateColorValue = updateValues.colorValue;
 
