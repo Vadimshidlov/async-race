@@ -150,8 +150,9 @@ export class WinnersTable {
 
     this.winnersBlock.append(
       winnersInfoBlock,
-      /* winnersTitlePageBlock, */ this.winnersTable,
       winnersPageControllerBlock,
+      /* winnersTitlePageBlock, */ this.winnersTable,
+      /* winnersPageControllerBlock, */
     );
   }
 
@@ -245,9 +246,12 @@ export class WinnersTable {
     });
   }
 
-  private setCurrentPageAndCount(winnerCount: number, pageNumber: number): void {
+  private async setCurrentPageAndCount(winnerCount: number, pageNumber: number): Promise<void> {
+    const winnersCount = await this.winnersService.getWinnersCount();
+    const winnersPagesCount = Math.ceil(winnersCount / this.WINNERS_PAGE_LIMIT);
+
     this.winnersTitle.textContent = `Winners (${winnerCount})`;
-    this.winnersTitlePage.textContent = `Page: ${pageNumber}`;
+    this.winnersTitlePage.textContent = `Page: ${pageNumber}/${winnersPagesCount}`;
   }
 
   private addEventListeners(): void {

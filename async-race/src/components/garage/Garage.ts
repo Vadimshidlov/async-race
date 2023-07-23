@@ -1,481 +1,511 @@
-import {GarageService, GetCarsType} from '../../services/GarageService';
-import {WinnersService} from '../../services/WinnersService';
-import {StartMoveResultType} from '../cars/car';
-import {EquipmentCar} from '../cars/EquipmentCar';
-import {CreateButtonElement} from '../create-input/create-button';
+import { GarageService, GetCarsType } from '../../services/GarageService';
+import { WinnersService } from '../../services/WinnersService';
+import { StartMoveResultType } from '../cars/car';
+import { EquipmentCar } from '../cars/EquipmentCar';
+import { CreateButtonElement } from '../create-input/create-button';
 import createElement from '../element/element-creator';
-import {GarageController} from '../GarageController/GarageController';
-import {getRandomCarName} from '../genereteCars/generateCarName';
-import {generateColor} from '../genereteCars/generateColor';
+import { GarageController } from '../GarageController/GarageController';
+import { getRandomCarName } from '../genereteCars/generateCarName';
+import { generateColor } from '../genereteCars/generateColor';
 
 export type NewCarDataType = {
-    name: string;
-    color: string;
+  name: string;
+  color: string;
 };
 
 export type CompareWinnerResultType = {
-    time: number;
-    winsCount: number
-}
-
+  time: number;
+  winsCount: number;
+};
 
 export type WinnerPropsDataType = {
-    carId: number;
-    carName: string;
-    roadTime: number;
+  carId: number;
+  carName: string;
+  roadTime: number;
 };
 
 export class Garage {
-    private garage: HTMLElement = createElement({
-        tag: 'div',
-        classNames: ['garage'],
-        text: '',
+  private garage: HTMLElement = createElement({
+    tag: 'div',
+    classNames: ['garage'],
+    text: '',
+  });
+
+  private readonly raceParty: EquipmentCar[] = [];
+
+  private carGarageApi = new GarageService();
+
+  private garageController = new GarageController();
+
+  private garageControllerElement = this.garageController.getControllerHtml();
+
+  private createButtonElement = this.garageController.getCreateButton();
+
+  private raceStartButtonElement = this.garageController.getRaceStartButton();
+
+  private raceResetButtonElement = this.garageController.getRaceResetButton();
+
+  private updateButtonElement = this.garageController.getUpdateCarButton();
+
+  private generateCarsButtonElement = this.garageController.getGenerateCarButton();
+
+  private garageCarsCount = createElement({
+    tag: 'span',
+    classNames: ['block-garage__count'],
+    text: '',
+  });
+
+  private garagePageNumber = createElement({
+    tag: 'span',
+    classNames: ['block-garage__pages'],
+    text: 'Page: 1',
+  });
+
+  private garageCurrentPage;
+
+  private prevPageButtonElement: HTMLButtonElement = new CreateButtonElement('Prev').getElement();
+
+  private nextPageButtonElement: HTMLButtonElement = new CreateButtonElement('Next').getElement();
+
+  private winnerService = new WinnersService();
+
+  private popupMessage: HTMLElement | null = null;
+
+  private DELTA_INDEX_NUMBER = 1;
+
+  private GARAGE_PAGE_LIMIT = 7;
+
+  private GARAGE_GENERATE_CARS_COUNT = 100;
+
+  constructor(garageCurrentPage: number) {
+    this.garageCurrentPage = garageCurrentPage;
+    this.getCars();
+    this.addEventListeners();
+  }
+
+  public getGarageHtml(): HTMLElement {
+    const garageBlock = createElement({
+      tag: 'section',
+      classNames: ['garage__block', 'block-garage'],
+      text: '',
     });
 
-    private readonly raceParty: EquipmentCar[] = [];
-
-    private carGarageApi = new GarageService();
-
-    private garageController = new GarageController();
-
-    private garageControllerElement = this.garageController.getControllerHtml();
-
-    private createButtonElement = this.garageController.getCreateButton();
-
-    private raceStartButtonElement = this.garageController.getRaceStartButton();
-
-    private raceResetButtonElement = this.garageController.getRaceResetButton();
-
-    private updateButtonElement = this.garageController.getUpdateCarButton();
-
-    private generateCarsButtonElement = this.garageController.getGenerateCarButton();
-
-    private garageCarsCount = createElement({
-        tag: 'span',
-        classNames: ['block-garage__count'],
-        text: '',
+    const garageInfo = createElement({
+      tag: 'div',
+      classNames: ['block-garage__info'],
+      text: '',
     });
 
-    private garagePageNumber = createElement({
-        tag: 'span',
-        classNames: ['block-garage__pages'],
-        text: 'Page: 1',
+    // const garageTitle = createElement({
+    //     tag: 'h1',
+    //     classNames: ['block-garage__title'],
+    //     text: 'GARAGE',
+    // });
+
+    const garagePageController = createElement({
+      tag: 'div',
+      classNames: ['block-garage__page-controller'],
+      text: '',
     });
 
-    private garageCurrentPage;
+    this.prevPageButtonElement.disabled = true;
+    this.nextPageButtonElement.disabled = true;
+    garagePageController.append(this.prevPageButtonElement, this.nextPageButtonElement);
 
-    private prevPageButtonElement: HTMLButtonElement = new CreateButtonElement('Prev').getElement();
+    const garagePageControllerWrapper = createElement({
+      tag: 'div',
+      classNames: ['page-controller__wrapper'],
+      text: '',
+    });
 
-    private nextPageButtonElement: HTMLButtonElement = new CreateButtonElement('Next').getElement();
+    garagePageControllerWrapper.append(garagePageController);
 
-    private winnerService = new WinnersService();
+    garageInfo.append(
+      /* garageTitle, */ this.garageCarsCount,
+      this.garagePageNumber,
+      garagePageControllerWrapper,
+    );
 
-    private popupMessage: HTMLElement | null = null;
+    const garagePageHeader = createElement({
+      tag: 'div',
+      classNames: ['block-garage__header'],
+      text: '',
+    });
 
-    private DELTA_INDEX_NUMBER = 1;
+    garagePageHeader.append(this.garageControllerElement, garageInfo);
 
-    constructor(garageCurrentPage: number) {
-        this.garageCurrentPage = garageCurrentPage;
-        this.getCars();
-        this.addEventListeners();
+    garageBlock.append(
+      /* this.garageControllerElement,
+      garageInfo,
+      garageInfo, */
+      garagePageHeader,
+      this.garage,
+      //   garagePageController,
+    );
+
+    return garageBlock;
+  }
+
+  private async addSingleCar(newCarData: GetCarsType): Promise<void> {
+    const carsPageCount = (await this.carGarageApi.getCars(this.garageCurrentPage)).length;
+    if (carsPageCount <= this.GARAGE_PAGE_LIMIT) {
+      const equipmentProps = {
+        carColor: newCarData.color,
+        carName: newCarData.name,
+        id: newCarData.id,
+        garageController: this.garageController,
+        deleteCarsCallback: this.deleteCarCallback.bind(this),
+        selectCarCallback: this.disableAllSelectButtons.bind(this),
+      };
+
+      const equipmentCar = new EquipmentCar(equipmentProps);
+      const car = equipmentCar.getCar();
+      this.raceParty.push(equipmentCar);
+      this.garage.append(car);
     }
+  }
 
-    public getGarageHtml(): HTMLElement {
-        const garageBlock = createElement({
-            tag: 'section',
-            classNames: ['garage__block', 'block-garage'],
-            text: '',
-        });
+  private addEventListeners(): void {
+    this.nextPageButtonElement.addEventListener('click', async () => {
+      if (this.garageCurrentPage === 1) {
+        this.prevPageButtonElement.disabled = false;
+      }
+      const carsGarageCount = await this.carGarageApi.getCountCars();
+      this.garageCurrentPage += this.DELTA_INDEX_NUMBER;
+      this.getCars(this.garageCurrentPage);
 
-        const garageInfo = createElement({
-            tag: 'div',
-            classNames: ['block-garage__info'],
-            text: '',
-        });
-
-        // const garageTitle = createElement({
-        //     tag: 'h1',
-        //     classNames: ['block-garage__title'],
-        //     text: 'GARAGE',
-        // });
-
-        const garagePageController = createElement({
-            tag: 'div',
-            classNames: ['block-garage__page-controller'],
-            text: '',
-        });
-
-        this.prevPageButtonElement.disabled = true;
+      if (this.garageCurrentPage === Math.ceil(carsGarageCount / 7)) {
         this.nextPageButtonElement.disabled = true;
-        garagePageController.append(this.prevPageButtonElement, this.nextPageButtonElement);
+      }
+    });
 
-        garageInfo.append(/* garageTitle, */ this.garageCarsCount, this.garagePageNumber);
-
-        garageBlock.append(
-            this.garageControllerElement,
-            garageInfo,
-            garageInfo,
-            this.garage,
-            garagePageController,
-        );
-
-        return garageBlock;
-    }
-
-    private async addSingleCar(newCarData: GetCarsType): Promise<void> {
-        const carsPageCount = (await this.carGarageApi.getCars(this.garageCurrentPage)).length;
-        if (carsPageCount <= 7) {
-            const equipmentProps = {
-                carColor: newCarData.color,
-                carName: newCarData.name,
-                id: newCarData.id,
-                garageController: this.garageController,
-                deleteCarsCallback: this.deleteCarCallback.bind(this),
-                selectCarCallback: this.disableAllSelectButtons.bind(this),
-            };
-
-            const equipmentCar = new EquipmentCar(equipmentProps);
-            const car = equipmentCar.getCar();
-            this.raceParty.push(equipmentCar);
-            this.garage.append(car);
+    this.prevPageButtonElement.addEventListener('click', async () => {
+      if (this.garageCurrentPage !== 1) {
+        const carsGarageCount = await this.carGarageApi.getCountCars();
+        if (this.garageCurrentPage === Math.ceil(carsGarageCount / 7)) {
+          this.nextPageButtonElement.disabled = false;
         }
-    }
 
-    private addEventListeners(): void {
-        this.nextPageButtonElement.addEventListener('click', async () => {
-            if (this.garageCurrentPage === 1) {
-                this.prevPageButtonElement.disabled = false;
-            }
-            const carsGarageCount = await this.carGarageApi.getCountCars();
-            this.garageCurrentPage += 1;
-            this.getCars(this.garageCurrentPage);
+        this.garageCurrentPage -= this.DELTA_INDEX_NUMBER;
+        if (this.garageCurrentPage === 1) {
+          this.prevPageButtonElement.disabled = true;
+        }
+        this.getCars(this.garageCurrentPage);
+      }
+    });
 
-            if (this.garageCurrentPage === Math.ceil(carsGarageCount / 7)) {
-                this.nextPageButtonElement.disabled = true;
-            }
-        });
+    this.createButtonElement.addEventListener('click', async () => {
+      // this.garageController.getCreateInput().required = true;
+      const newCarData = this.garageController.getCreateCarValues();
+      if (newCarData.textValue === '') {
+        this.garageController.setCreateInputFailedState();
+        return;
+      }
+      const responseNewCarData = await this.carGarageApi.createCar(
+        newCarData.textValue,
+        newCarData.colorValue,
+      );
 
-        this.prevPageButtonElement.addEventListener('click', async () => {
-            if (this.garageCurrentPage !== 1) {
-                const carsGarageCount = await this.carGarageApi.getCountCars();
-                if (this.garageCurrentPage === Math.ceil(carsGarageCount / 7)) {
-                    this.nextPageButtonElement.disabled = false;
-                }
+      const carsGarageCount = await this.carGarageApi.getCountCars();
+      this.setGarageCarsCount(carsGarageCount);
+      if (carsGarageCount <= this.GARAGE_PAGE_LIMIT) {
+        await this.addSingleCar(responseNewCarData);
+      }
 
-                this.garageCurrentPage -= 1;
-                if (this.garageCurrentPage === 1) {
-                    this.prevPageButtonElement.disabled = true;
-                }
-                this.getCars(this.garageCurrentPage);
-            }
-        });
+      if (carsGarageCount > this.GARAGE_PAGE_LIMIT) {
+        this.nextPageButtonElement.disabled = false;
+      }
 
-        this.createButtonElement.addEventListener('click', async () => {
-            // this.garageController.getCreateInput().required = true;
-            const newCarData = this.garageController.getCreateCarValues();
-            if (newCarData.textValue === '') {
-                this.garageController.setCreateInputFailedState();
-                return;
-            }
-            const responseNewCarData = await this.carGarageApi.createCar(
-                newCarData.textValue,
-                newCarData.colorValue,
-            );
+      const countGarageCars = await this.carGarageApi.getCountCars();
+      if (countGarageCars > 0) {
+        this.garageController.enableRaceStartButton();
+      }
+      // this.garage.innerHTML = '';
+      // this.getCars(this.garageCurrentPage);
+      this.garageController.clearCreateInputValues();
+    });
 
-            const carsGarageCount = await this.carGarageApi.getCountCars();
-            this.setGarageCarsCount(carsGarageCount);
-            if (carsGarageCount <= 7) {
-                await this.addSingleCar(responseNewCarData);
-            }
+    this.raceStartButtonElement.addEventListener('click', async () => {
+      this.garageController.disableControllerButtons();
+      this.garageController.disableCreateInput();
+      this.disablePageControllerButtons();
+      this.raceParty.forEach((raceMember) => raceMember.disableAllButtons());
+      const raceResult = await Promise.all(
+        this.raceParty.map((raceMember) => raceMember.startRaceMoveCar()),
+      );
+      // this.raceParty.forEach((raceMember) => raceMember.enableAllButtons());
+      // this.garageController.enableControllerButtons();
+      this.raceResetButtonElement.disabled = false;
 
-            if (carsGarageCount > 7) {
-                this.nextPageButtonElement.disabled = false;
-            }
+      const finallyRaceResult = raceResult.reduce<StartMoveResultType[]>(
+        (accum, raceMember): StartMoveResultType[] => {
+          if (accum.length === 0 && raceMember) {
+            accum.push(raceMember);
+          }
 
-            const countGarageCars = await this.carGarageApi.getCountCars();
-            if (countGarageCars > 0) {
-                this.garageController.enableRaceStartButton();
-            }
-            // this.garage.innerHTML = '';
-            // this.getCars(this.garageCurrentPage);
-            this.garageController.clearCreateInputValues();
-        });
+          if (raceMember && raceMember.roadTime < accum[0].roadTime) {
+            accum.splice(0, 1, raceMember);
+          }
 
-        this.raceStartButtonElement.addEventListener('click', async () => {
-            this.garageController.disableControllerButtons();
-            this.garageController.disableCreateInput();
-            this.disablePageControllerButtons()
-            this.raceParty.forEach((raceMember) => raceMember.disableAllButtons());
-            const raceResult = await Promise.all(
-                this.raceParty.map((raceMember) => raceMember.startRaceMoveCar()),
-            );
-            // this.raceParty.forEach((raceMember) => raceMember.enableAllButtons());
-            // this.garageController.enableControllerButtons();
-            this.raceResetButtonElement.disabled = false;
+          return accum;
+        },
+        [],
+      );
 
-            const finallyRaceResult = raceResult.reduce<StartMoveResultType[]>(
-                (accum, raceMember): StartMoveResultType[] => {
-                    if (accum.length === 0 && raceMember) {
-                        accum.push(raceMember);
-                    }
+      console.log(...finallyRaceResult);
+      if (finallyRaceResult.length !== 0) {
+        const winnerData = finallyRaceResult[0];
+        await this.createWinner(winnerData);
+        this.showWinnerPopup(winnerData.roadTime, winnerData.carName);
+      } else {
+        this.showWinnerPopup();
+      }
+    });
 
-                    if (raceMember && raceMember.roadTime < accum[0].roadTime) {
-                        accum.splice(0, 1, raceMember);
-                    }
+    this.raceResetButtonElement.addEventListener('click', () => {
+      console.log('raceResetButtonClick');
+      this.raceParty.forEach((raceMember) => raceMember.setCarToInitialPlace());
+      this.raceParty.forEach((raceMember) => raceMember.enableAllButtons());
+      this.garageController.enableControllerButtons();
+      this.garageController.enableCreateInput();
+      this.raceResetButtonElement.disabled = true;
+      this.enablePageControllerButtons();
+    });
 
-                    return accum;
-                },
-                [],
-            );
-
-            console.log(...finallyRaceResult);
-            if (finallyRaceResult.length !== 0) {
-                const winnerData = finallyRaceResult[0];
-                await this.createWinner(winnerData);
-                this.showWinnerPopup(winnerData.roadTime, winnerData.carName);
-            } else {
-                this.showWinnerPopup();
-            }
-        });
-
-        this.raceResetButtonElement.addEventListener('click', () => {
-            console.log('raceResetButtonClick');
-            this.raceParty.forEach((raceMember) => raceMember.setCarToInitialPlace());
-            this.raceParty.forEach((raceMember) => raceMember.enableAllButtons());
-            this.garageController.enableControllerButtons();
-            this.garageController.enableCreateInput();
-            this.raceResetButtonElement.disabled = true;
-            this.enablePageControllerButtons();
-        });
-
-        this.updateButtonElement.addEventListener('click', async () => {
-            await this.updateCar();
-            /* this.raceParty.forEach((raceMember) => raceMember.enableSelectButton());
+    this.updateButtonElement.addEventListener('click', async () => {
+      await this.updateCar();
+      /* this.raceParty.forEach((raceMember) => raceMember.enableSelectButton());
             this.garageController.disableUpdateInput();
             this.garageController.enableCreateInput();
             this.generateCarsButtonElement.disabled = false; */
-        });
+    });
 
-        this.generateCarsButtonElement.addEventListener('click', async () => {
-            await this.generateNewCars();
-        });
-    }
+    this.generateCarsButtonElement.addEventListener('click', async () => {
+      await this.generateNewCars();
+    });
+  }
 
-    private compareWinnerResult(previousTime: number, currentTime: number, winsCount: number): CompareWinnerResultType {
-        const currentWinnerTime =
-            previousTime < currentTime
-                ? previousTime
-                : currentTime;
-        const currentWinnerWins = winsCount + this.DELTA_INDEX_NUMBER;
+  private compareWinnerResult(
+    previousTime: number,
+    currentTime: number,
+    winsCount: number,
+  ): CompareWinnerResultType {
+    const currentWinnerTime = previousTime < currentTime ? previousTime : currentTime;
+    const currentWinnerWins = winsCount + this.DELTA_INDEX_NUMBER;
 
-        return {time: currentWinnerTime, winsCount: currentWinnerWins}
-    }
+    return { time: currentWinnerTime, winsCount: currentWinnerWins };
+  }
 
-    private async createWinner(winnerPropsData: WinnerPropsDataType): Promise<void> {
-        const winnerId = winnerPropsData.carId;
-        const winnerTime = winnerPropsData.roadTime;
+  private async createWinner(winnerPropsData: WinnerPropsDataType): Promise<void> {
+    const winnerId = winnerPropsData.carId;
+    const winnerTime = winnerPropsData.roadTime;
 
-        try {
-            const previousWinnerResult = await this.winnerService.getWinner(winnerId);
-            const bestWinnerResult = this.compareWinnerResult(previousWinnerResult.time, winnerPropsData.roadTime, previousWinnerResult.wins)
-            /* const currentWinnerTime =
+    try {
+      const previousWinnerResult = await this.winnerService.getWinner(winnerId);
+      const bestWinnerResult = this.compareWinnerResult(
+        previousWinnerResult.time,
+        winnerPropsData.roadTime,
+        previousWinnerResult.wins,
+      );
+      /* const currentWinnerTime =
                 previousWinnerResult.time < winnerPropsData.roadTime
                     ? previousWinnerResult.time
                     : winnerPropsData.roadTime;
             const currentWinnerWins = previousWinnerResult.wins + 1; */
 
-            /* const resultCreateWinner =  */
-            await this.winnerService.updateWinner(
-                winnerId,
-                bestWinnerResult.winsCount,
-                bestWinnerResult.time
-                /* currentWinnerWins,
+      /* const resultCreateWinner =  */
+      await this.winnerService.updateWinner(
+        winnerId,
+        bestWinnerResult.winsCount,
+        bestWinnerResult.time,
+        /* currentWinnerWins,
                 currentWinnerTime, */
-            );
-            // console.log(resultCreateWinner);
-        } catch (error) {
-            await this.winnerService.createWinner(winnerId, 1, winnerTime);
-        }
+      );
+      // console.log(resultCreateWinner);
+    } catch (error) {
+      await this.winnerService.createWinner(winnerId, 1, winnerTime);
+    }
+  }
+
+  private async generateNewCars(): Promise<void> {
+    const newCarDataList: NewCarDataType[] = [];
+    const beforGenerateCarCount = await this.carGarageApi.getCountCars();
+
+    for (let i = 0; i < this.GARAGE_GENERATE_CARS_COUNT; i += this.DELTA_INDEX_NUMBER) {
+      const newCarName = getRandomCarName();
+      const newCarColor = generateColor();
+      newCarDataList.push({ name: newCarName, color: newCarColor });
     }
 
-    private async generateNewCars(): Promise<void> {
-        const newCarDataList: NewCarDataType[] = [];
-        const beforGenerateCarCount = await this.carGarageApi.getCountCars();
+    newCarDataList.forEach(async (newCarData) => {
+      await this.carGarageApi.createCar(newCarData.name, newCarData.color);
+    });
 
-        for (let i = 0; i < 100; i += 1) {
-            const newCarName = getRandomCarName();
-            const newCarColor = generateColor();
-            newCarDataList.push({name: newCarName, color: newCarColor});
-        }
+    const carsGarageCount = await this.carGarageApi.getCountCars();
+    this.setGarageCarsCount(carsGarageCount);
+    if (beforGenerateCarCount < this.GARAGE_PAGE_LIMIT) {
+      this.getCars();
+    }
+  }
 
-        newCarDataList.forEach(async (newCarData) => {
-            await this.carGarageApi.createCar(newCarData.name, newCarData.color);
-        });
+  private disablePageControllerButtons(): void {
+    this.prevPageButtonElement.disabled = true;
+    this.nextPageButtonElement.disabled = true;
+  }
 
-        const carsGarageCount = await this.carGarageApi.getCountCars();
-        this.setGarageCarsCount(carsGarageCount);
-        if (beforGenerateCarCount < 7) {
-            this.getCars();
-        }
+  private async enablePageControllerButtons(): Promise<void> {
+    const carsGarageCount = await this.carGarageApi.getCountCars();
+    if (this.garageCurrentPage === 1) {
+      this.prevPageButtonElement.disabled = true;
+    } else {
+      this.prevPageButtonElement.disabled = false;
     }
 
-    private disablePageControllerButtons(): void {
-        this.prevPageButtonElement.disabled = true;
-        this.nextPageButtonElement.disabled = true;
+    if (this.garageCurrentPage === Math.ceil(carsGarageCount / this.GARAGE_PAGE_LIMIT)) {
+      this.nextPageButtonElement.disabled = true;
+    } else {
+      this.nextPageButtonElement.disabled = false;
     }
+  }
 
-    private async enablePageControllerButtons(): Promise<void> {
-        const carsGarageCount = await this.carGarageApi.getCountCars();
-        if (this.garageCurrentPage === 1) {
-            this.prevPageButtonElement.disabled = true;
-        } else {
-            this.prevPageButtonElement.disabled = false;
-        }
+  public async deleteCarCallback(): Promise<void> {
+    await this.getCars(this.garageCurrentPage);
+  }
 
-        if (this.garageCurrentPage === Math.ceil(carsGarageCount / 7)) {
-            this.nextPageButtonElement.disabled = true;
-        } else {
-            this.nextPageButtonElement.disabled = false;
-        }
+  public async getCars(page = this.garageCurrentPage): Promise<void> {
+    this.setGaragePageNumber(page);
+    const pageCars = await this.carGarageApi.getCars(page);
+    this.raceParty.length = 0;
+    this.garage.innerHTML = '';
+
+    pageCars.forEach((carData) => {
+      const equipmentProps = {
+        carColor: carData.color,
+        carName: carData.name,
+        id: carData.id,
+        garageController: this.garageController,
+        deleteCarsCallback: this.getCars.bind(this),
+        selectCarCallback: this.disableAllSelectButtons.bind(this),
+      };
+
+      const equipmentCar = new EquipmentCar(equipmentProps);
+      const car = equipmentCar.getCar();
+      this.raceParty.push(equipmentCar);
+      this.garage.append(car);
+    });
+
+    const carsGarageCount = await this.carGarageApi.getCountCars();
+    if (carsGarageCount > this.GARAGE_PAGE_LIMIT && this.garageCurrentPage === 1) {
+      this.prevPageButtonElement.disabled = true;
+      this.nextPageButtonElement.disabled = false;
     }
-
-
-    public async deleteCarCallback(): Promise<void> {
-        await this.getCars(this.garageCurrentPage);
-    }
-
-    public async getCars(page = this.garageCurrentPage): Promise<void> {
-        this.setGaragePageNumber(page)
-        const pageCars = await this.carGarageApi.getCars(page);
-        this.raceParty.length = 0;
-        this.garage.innerHTML = '';
-
-        pageCars.forEach((carData) => {
-            const equipmentProps = {
-                carColor: carData.color,
-                carName: carData.name,
-                id: carData.id,
-                garageController: this.garageController,
-                deleteCarsCallback: this.getCars.bind(this),
-                selectCarCallback: this.disableAllSelectButtons.bind(this),
-            };
-
-            const equipmentCar = new EquipmentCar(equipmentProps);
-            const car = equipmentCar.getCar();
-            this.raceParty.push(equipmentCar);
-            this.garage.append(car);
-        });
-
-        const carsGarageCount = await this.carGarageApi.getCountCars();
-        if (carsGarageCount > 7 && this.garageCurrentPage === 1) {
-            console.log('1234');
-            this.prevPageButtonElement.disabled = true;
-            this.nextPageButtonElement.disabled = false;
-        }
-        /* if (carsGarageCount <= 7) {
+    /* if (carsGarageCount <= 7) {
           this.nextPageButtonElement.disabled = true;
         } */
-        this.setGarageCarsCount(carsGarageCount);
+    this.setGarageCarsCount(carsGarageCount);
+  }
+
+  private disableAllSelectButtons(): void {
+    this.raceParty.forEach((raceMember) => raceMember.disableSelectButton());
+  }
+
+  public setGarageCarsCount(count: number): void {
+    this.garageCarsCount.textContent = `Garage: (${count}) Cars`;
+  }
+
+  private async updateCar(): Promise<void> {
+    const updateCarId = this.garageController.getUpdateSelectCarId();
+    const updateValues = this.garageController.getUpdateCarValues();
+    const updateCarName = updateValues.textValue;
+    const updateColorValue = updateValues.colorValue;
+
+    if (updateCarName === '') {
+      this.garageController.setUpdateInputFailedState();
+      return;
     }
 
-    private disableAllSelectButtons(): void {
-        this.raceParty.forEach((raceMember) => raceMember.disableSelectButton());
-    }
+    const updateCarResponse = await this.carGarageApi.updateCar(
+      updateCarId,
+      updateCarName,
+      updateColorValue,
+    );
 
-    public setGarageCarsCount(count: number): void {
-        this.garageCarsCount.textContent = `Garage: (${count}) Cars`;
-    }
+    // await this.carGarageApi.createCar(updateCarResponse.name, updateCarResponse.color);
 
-    private async updateCar(): Promise<void> {
-        const updateCarId = this.garageController.getUpdateSelectCarId();
-        const updateValues = this.garageController.getUpdateCarValues();
-        const updateCarName = updateValues.textValue;
-        const updateColorValue = updateValues.colorValue;
+    this.raceParty.forEach((raceMember) => {
+      const raceMemberId = raceMember.getCarId();
 
-        if (updateCarName === '') {
-            this.garageController.setUpdateInputFailedState();
-            return;
-        }
+      if (raceMemberId === updateCarId) {
+        raceMember.setCarName(updateCarName);
+        raceMember.setCarColor(updateColorValue);
+        raceMember.deleteSelectedState();
+      }
+    });
 
-        const updateCarResponse = await this.carGarageApi.updateCar(
-            updateCarId,
-            updateCarName,
-            updateColorValue,
-        );
+    this.updateButtonElement.disabled = true;
+    this.createButtonElement.disabled = false;
+    this.raceStartButtonElement.disabled = false;
+    this.garageController.clearUpdateInputValues();
 
-        // await this.carGarageApi.createCar(updateCarResponse.name, updateCarResponse.color);
+    this.raceParty.forEach((raceMember) => raceMember.enableSelectButton());
+    this.garageController.disableUpdateInput();
+    this.garageController.enableCreateInput();
+    this.generateCarsButtonElement.disabled = false;
+  }
 
-        this.raceParty.forEach((raceMember) => {
-            const raceMemberId = raceMember.getCarId();
+  public getGarageCurrentPage(): number {
+    return this.garageCurrentPage;
+  }
 
-            if (raceMemberId === updateCarId) {
-                raceMember.setCarName(updateCarName);
-                raceMember.setCarColor(updateColorValue);
-                raceMember.deleteSelectedState();
-            }
-        });
+  private showWinnerPopup(time?: number, carName?: string): void {
+    const winnerPopupBlock: HTMLElement = createElement({
+      tag: 'div',
+      classNames: ['winner__popup', `popup`],
+      text: '',
+    });
 
-        this.updateButtonElement.disabled = true;
-        this.createButtonElement.disabled = false;
-        this.raceStartButtonElement.disabled = false;
-        this.garageController.clearUpdateInputValues();
-
-        this.raceParty.forEach((raceMember) => raceMember.enableSelectButton());
-        this.garageController.disableUpdateInput();
-        this.garageController.enableCreateInput();
-        this.generateCarsButtonElement.disabled = false;
-    }
-
-    public getGarageCurrentPage(): number {
-        return this.garageCurrentPage;
-    }
-
-    private showWinnerPopup(time?: number, carName?: string): void {
-        const winnerPopupBlock: HTMLElement = createElement({
-            tag: 'div',
-            classNames: ['winner__popup', `popup`],
-            text: '',
-        });
-
-        const winnerPopupMessage: HTMLElement = createElement({
-            tag: 'span',
-            classNames: ['popup__mesage'],
-            text: `The Winner is ${carName}.
+    const winnerPopupMessage: HTMLElement = createElement({
+      tag: 'span',
+      classNames: ['popup__mesage'],
+      text: `The Winner is ${carName}.
             Time - ${time?.toFixed(2)} sec.`,
-        });
+    });
 
-        const winnerPopupButton: HTMLButtonElement = createElement({
-            tag: 'button',
-            classNames: ['popup__button'],
-            text: 'x',
-        });
+    const winnerPopupButton: HTMLButtonElement = createElement({
+      tag: 'button',
+      classNames: ['popup__button'],
+      text: 'x',
+    });
 
-        if (!time && !carName) {
-            winnerPopupMessage.textContent = `Ooops :(
+    if (!time && !carName) {
+      winnerPopupMessage.textContent = `Ooops :(
         There is no winner...
         `;
-        }
-
-        winnerPopupButton.addEventListener('click', () => {
-            this.removeWinnerMessage();
-            // this.enablePageControllerButtons();
-        });
-
-        winnerPopupBlock.append(winnerPopupMessage, winnerPopupButton);
-
-        this.popupMessage = winnerPopupBlock;
-        this.garage.append(winnerPopupBlock);
-        this.raceResetButtonElement.disabled = true;
     }
 
-    private removeWinnerMessage(): void {
-        if (this.popupMessage) {
-            this.popupMessage.remove();
-            this.raceResetButtonElement.disabled = false;
-        }
-    }
+    winnerPopupButton.addEventListener('click', () => {
+      this.removeWinnerMessage();
+      // this.enablePageControllerButtons();
+    });
 
-    private setGaragePageNumber(value: number): void {
-        this.garagePageNumber.textContent = `Page: ${value}`
+    winnerPopupBlock.append(winnerPopupMessage, winnerPopupButton);
+
+    this.popupMessage = winnerPopupBlock;
+    this.garage.append(winnerPopupBlock);
+    this.raceResetButtonElement.disabled = true;
+  }
+
+  private removeWinnerMessage(): void {
+    if (this.popupMessage) {
+      this.popupMessage.remove();
+      this.raceResetButtonElement.disabled = false;
     }
+  }
+
+  private async setGaragePageNumber(value: number): Promise<void> {
+    const carsGarageCount = await this.carGarageApi.getCountCars();
+    const garagePagesCount = Math.ceil(carsGarageCount / this.GARAGE_PAGE_LIMIT);
+
+    this.garagePageNumber.textContent = `Page: ${value}/${garagePagesCount}`;
+  }
 }

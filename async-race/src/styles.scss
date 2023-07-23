@@ -69,20 +69,50 @@ body {
 // GARAGE
 
 .garage__block {
+  .block-garage__header {
+    display: flex;
+    justify-content: space-between;
+
+    @media (max-width: 740px) {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+  }
   .block-garage__info {
+    padding: 5px;
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
     gap: 10px;
     margin-bottom: 20px;
     font-size: 1.5rem;
+    border: 1px solid black;
+    width: 25%;
+    border-radius: 17px;
+
+    @media (max-width: 740px) {
+      width: 40%;
+      font-size: 1.2rem;
+    }
 
     .block-garage__title {
     }
 
     .block-garage__pages {
+      // border: 1px solid black;
+      // width: 15%;
+      // border-radius: 17px;
+      text-align: center;
     }
 
     .block-garage__count {
+    }
+
+    .page-controller__wrapper {
+      display: flex;
+      width: 100%;
+      justify-content: center;
     }
   }
 }

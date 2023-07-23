@@ -46,7 +46,7 @@
         }
 
         .car-filed__name {
-          font-size: 1.4rem;
+          font-size: 1.2rem;
         }
       }
 
@@ -143,18 +143,27 @@
 
 .block-garage__page-controller {
   display: flex;
-  column-gap: 20px;
+  column-gap: 10px;
 
   .create-block__button {
-    width: 60px;
+    /* width: 60px;
     padding: 5px 5px 24px 5px;
     height: 20px;
     border-radius: 5px;
     font-size: 1.1rem;
     font-weight: 600;
     transition: all 0.5s;
-    cursor: pointer;
+    cursor: pointer; */
     // background: rgb(198 233 144);
+
+    width: 46px;
+    padding: 5px 5px 22px 5px;
+    height: 19px;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.5s;
+    cursor: pointer;
 
     &:hover {
       opacity: 0.5;
