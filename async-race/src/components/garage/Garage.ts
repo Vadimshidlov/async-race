@@ -208,7 +208,7 @@ export class Garage implements IGarage {
 
             const carsGarageCount = await this.carGarageApi.getCountCars();
             this.setGarageCarsCount(carsGarageCount);
-            if (carsGarageCount <= this.GARAGE_PAGE_LIMIT) {
+            if (carsGarageCount <= this.GARAGE_PAGE_LIMIT || this.raceParty.length < this.GARAGE_PAGE_LIMIT) {
                 await this.addSingleCar(responseNewCarData);
             }
 
