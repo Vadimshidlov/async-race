@@ -53,7 +53,6 @@ export class GarageService implements IGarageService {
     }
 
     public async createCar(name: string, color: string): Promise<GetCarsType> {
-        console.log(typeof name, `~~name`, typeof color, `~~car`);
         const response = await fetch(this.garageUrl, {
             body: JSON.stringify({name, color}),
             headers: {

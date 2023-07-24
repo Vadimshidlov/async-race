@@ -1,84 +1,84 @@
-import { getCarImage } from '../cars/get-car-image';
+import {getCarImage} from '../cars/get-car-image';
 import createElement from '../element/element-creator';
 
 export type WinnerDataType = {
-  // id: number;
-  wins: number;
-  time: number;
-  color: string;
-  indexNumber: number;
-  name: string;
+    // id: number;
+    wins: number;
+    time: number;
+    color: string;
+    indexNumber: number;
+    name: string;
 };
 
-export class WinnersItem {
-  private winnersItem: HTMLElement = createElement({
-    tag: 'tr',
-    classNames: ['winners__item', 'winner'],
-    text: '',
-  });
+export interface IWinnersItem {
+    getWinnerHtml: () => HTMLElement
+}
 
-  private winnerNumber: HTMLElement;
-
-  private winnerCar: HTMLElement;
-
-  private winnerName: HTMLElement;
-
-  private winnerWins: HTMLElement;
-
-  private winnerTime: HTMLElement;
-
-  constructor(winnerData: WinnerDataType) {
-    this.winnerNumber = createElement({
-      tag: 'td',
-      classNames: ['winner__number'],
-      text: `${winnerData.indexNumber}`,
+export class WinnersItem implements IWinnersItem {
+    private winnersItem: HTMLElement = createElement({
+        tag: 'tr',
+        classNames: ['winners__item', 'winner'],
+        text: '',
     });
 
-    this.winnerCar = createElement({
-      tag: 'td',
-      classNames: ['winner__car'],
-      text: '',
-    });
+    private readonly winnerNumber: HTMLElement;
 
-    this.winnerName = createElement({
-      tag: 'td',
-      classNames: ['winner__name'],
-      text: `${winnerData.name}`,
-    });
+    private readonly winnerCar: HTMLElement;
 
-    this.winnerWins = createElement({
-      tag: 'td',
-      classNames: ['winner__wins'],
-      text: `${winnerData.wins}`,
-    });
+    private readonly winnerName: HTMLElement;
 
-    this.winnerTime = createElement({
-      tag: 'td',
-      classNames: ['winner__time'],
-      text: `${winnerData.time}`,
-    });
+    private readonly winnerWins: HTMLElement;
 
-    this.winnersItem.append(
-      this.winnerNumber,
-      this.winnerCar,
-      this.winnerName,
-      this.winnerWins,
-      this.winnerTime,
-    );
+    private readonly winnerTime: HTMLElement;
 
-    this.configureWinner(winnerData.color);
-  }
+    constructor(winnerData: WinnerDataType) {
+        this.winnerNumber = createElement({
+            tag: 'td',
+            classNames: ['winner__number'],
+            text: `${winnerData.indexNumber}`,
+        });
 
-  private configureWinner(color: string): void {
-    const car = getCarImage(color, 60, 40);
-    this.winnerCar.innerHTML = car;
-  }
+        this.winnerCar = createElement({
+            tag: 'td',
+            classNames: ['winner__car'],
+            text: '',
+        });
 
-  public getWinnerHtml(): HTMLElement {
-    return this.winnersItem;
-  }
+        this.winnerName = createElement({
+            tag: 'td',
+            classNames: ['winner__name'],
+            text: `${winnerData.name}`,
+        });
 
-  // public addWinner(): void {}
+        this.winnerWins = createElement({
+            tag: 'td',
+            classNames: ['winner__wins'],
+            text: `${winnerData.wins}`,
+        });
 
-  // public getWinnerElement(): HTMLElement {}
+        this.winnerTime = createElement({
+            tag: 'td',
+            classNames: ['winner__time'],
+            text: `${winnerData.time}`,
+        });
+
+        this.winnersItem.append(
+            this.winnerNumber,
+            this.winnerCar,
+            this.winnerName,
+            this.winnerWins,
+            this.winnerTime,
+        );
+
+        this.configureWinner(winnerData.color);
+    }
+
+    private configureWinner(color: string): void {
+        const car = getCarImage(color, 60, 40);
+        this.winnerCar.innerHTML = car;
+    }
+
+    public getWinnerHtml(): HTMLElement {
+        return this.winnersItem;
+    }
 }

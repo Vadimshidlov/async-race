@@ -75,8 +75,6 @@ export class GarageController implements IGarageController {
     constructor() {
         this.createInputElement = this.createInput.getElement();
         this.updateInputElement = this.updateInput.getElement();
-        // this.createButtonElement = this.createButton.getElement();
-        // this.updateButtonElement = this.updateButton.getElement();
         this.createColorPickerElement = this.createColorPicker.getElement();
         this.updateColorPickerElement = this.updateColorPicker.getElement();
         this.disableUpdateInput();
@@ -139,7 +137,6 @@ export class GarageController implements IGarageController {
 
     public enableUpdateInput(): void {
         this.updateInputElement.disabled = false;
-        // this.updateInputElement.autofocus = true;
         this.updateInputElement.focus();
     }
 
@@ -222,12 +219,10 @@ export class GarageController implements IGarageController {
         this.raceResetButtonElement.disabled = true;
         this.generateCarButtonElement.disabled = true;
         this.createButtonElement.disabled = true;
-        // this.updateButtonElement.disabled = true;
     }
 
     public enableControllerButtons(): void {
         this.raceStartButtonElement.disabled = false;
-        // this.raceResetButtonElement.disabled = false;
         this.generateCarButtonElement.disabled = false;
         this.createButtonElement.disabled = false;
         this.updateButtonElement.disabled = true;

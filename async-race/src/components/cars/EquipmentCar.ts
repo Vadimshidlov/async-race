@@ -146,13 +146,10 @@ export class EquipmentCar implements IEquipmentCar {
 
     private addEventsHandler(): void {
         this.startCarButton.addEventListener(`click`, async () => {
-            console.log('single');
-
             await this.startSingleMoveCar();
         });
 
         this.returnCarButton.addEventListener('click', async () => {
-            console.log('return');
             await this.stopRaceMoveCar();
             this.car.setToStartPosition();
             this.enableAllButtons();
@@ -176,7 +173,6 @@ export class EquipmentCar implements IEquipmentCar {
 
         this.removeCarButton.addEventListener('click', async () => {
             const removeCarId = this.car.getCarId()
-
             // TODO delete winner with try catch
             try {
                 await this.winnerService.getWinner(removeCarId)

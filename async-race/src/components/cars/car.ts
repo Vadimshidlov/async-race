@@ -29,6 +29,8 @@ export class Car implements ICar {
 
     private readonly carName: string;
 
+    private readonly MILI_SECONDS_NUMBER = 1000;
+
     constructor(color: string, carId: number, carName: string) {
         this.carId = carId;
         this.carName = carName;
@@ -48,7 +50,7 @@ export class Car implements ICar {
 
         const go = (): void => {
             const currentTime = new Date().getTime();
-            const deltaTime = Math.min((currentTime - startTime) / 1000);
+            const deltaTime = Math.min((currentTime - startTime) / this.MILI_SECONDS_NUMBER);
 
             this.carElement.style.transform = `translateX(${(deltaTime * endPoint) / duration}%)`;
 
@@ -65,7 +67,7 @@ export class Car implements ICar {
             const startEngine = await this.carEngine.startEngine(this.carId);
             const speed = +startEngine.velocity;
             const distance = +startEngine.distance;
-            const roadTime = distance / speed / 1000;
+            const roadTime = distance / speed / this.MILI_SECONDS_NUMBER;
             this.animate(roadTime);
 
             await this.carEngine.driveEngine(this.carId);
