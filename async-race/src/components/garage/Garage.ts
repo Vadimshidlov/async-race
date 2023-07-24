@@ -452,7 +452,7 @@ export class Garage implements IGarage {
         const winnerPopupMessage: HTMLElement = createElement({
             tag: 'span',
             classNames: ['popup__message'],
-            text: `The Winner is ${carName}.
+            text: `The Winner is "${carName}".
             Time - ${time?.toFixed(2)} sec.`,
         });
 

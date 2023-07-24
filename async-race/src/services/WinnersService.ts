@@ -16,7 +16,23 @@ export type GetWinnersPropsType = {
     order: string,
 }
 
-export class WinnersService {
+export interface IWinnersService {
+    getWinnersCount: (page: number, limit: number) => Promise<number>
+    getWinners: (
+        {
+            page,
+            limit,
+            sort,
+            order,
+        }: GetWinnersPropsType
+    ) => Promise<WinnersType[]>
+    getWinner: (id: number) => Promise<WinnersType>
+    createWinner: (id: number, wins: number, time: number) => Promise<StartEngineType>
+    deleteWinner: (id: number) => Promise<object>
+    updateWinner: (id: number, wins: number, time: number) => Promise<object>
+}
+
+export class WinnersService implements IWinnersService {
     private readonly WINNERS_URL = 'http://127.0.0.1:3000/winners';
 
     private DEFAULT_WINNERS_LIMIT = 10
@@ -73,10 +89,6 @@ export class WinnersService {
         const response = await fetch(`${this.WINNERS_URL}/${id}`, {
             method: 'DELETE',
         });
-
-        // if (!response.ok) {
-        //     throw Error('The remote machine has never been a winner');
-        // }
 
         return response.json();
     }

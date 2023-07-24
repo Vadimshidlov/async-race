@@ -3,14 +3,16 @@ export type StartEngineType = {
     distance: string;
 };
 
-export type StartDriveType = {
-    success: boolean;
-};
+export interface IEngineService {
+    startEngine: (id: number) => Promise<StartEngineType>
+    stopEngine: (id: number) => Promise<StartEngineType>
+    driveEngine: (id: number) => Promise<Response>
+}
 
-export class EngineService {
+export class EngineService implements IEngineService {
     private readonly engineUrl = '/engine';
 
-    public async startEgine(id: number): Promise<StartEngineType> {
+    public async startEngine(id: number): Promise<StartEngineType> {
         const response = await fetch(`http://127.0.0.1:3000${this.engineUrl}?id=${id}&status=started`, {
             method: 'PATCH',
         });

@@ -176,7 +176,6 @@ export class EquipmentCar implements IEquipmentCar {
 
         this.removeCarButton.addEventListener('click', async () => {
             const removeCarId = this.car.getCarId()
-            // await this.carGarageService.deleteCar(removeCarId);
 
             // TODO delete winner with try catch
             try {

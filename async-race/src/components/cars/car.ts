@@ -62,7 +62,7 @@ export class Car implements ICar {
 
     public async startMove(): Promise<StartMoveResultType | void> {
         try {
-            const startEngine = await this.carEngine.startEgine(this.carId);
+            const startEngine = await this.carEngine.startEngine(this.carId);
             const speed = +startEngine.velocity;
             const distance = +startEngine.distance;
             const roadTime = distance / speed / 1000;
