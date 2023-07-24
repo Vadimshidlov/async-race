@@ -162,6 +162,8 @@ export class Garage {
       const car = equipmentCar.getCar();
       this.raceParty.push(equipmentCar);
       this.garage.append(car);
+      console.log(this.raceParty);
+      console.log(this.raceParty.length, `raceParty__length`);
     }
   }
 
@@ -373,6 +375,17 @@ export class Garage {
   }
 
   public async getCars(page = this.garageCurrentPage): Promise<void> {
+    const carsGarageCount = await this.carGarageApi.getCountCars();
+    
+    /* if (
+      this.garageCurrentPage === Math.ceil(carsGarageCount / this.GARAGE_PAGE_LIMIT) + 1 &&
+      this.raceParty.length === 0
+    ) {
+      console.log(`-= 1`);
+
+      this.garageCurrentPage -= 1;
+      this.getCars();
+    } */
     this.setGaragePageNumber(page);
     const pageCars = await this.carGarageApi.getCars(page);
     this.raceParty.length = 0;
@@ -394,7 +407,10 @@ export class Garage {
       this.garage.append(car);
     });
 
-    const carsGarageCount = await this.carGarageApi.getCountCars();
+    console.log(this.raceParty);
+    console.log(this.raceParty.length, `raceParty__length`);
+
+    // const carsGarageCount = await this.carGarageApi.getCountCars();
     if (carsGarageCount > this.GARAGE_PAGE_LIMIT && this.garageCurrentPage === 1) {
       this.prevPageButtonElement.disabled = true;
       this.nextPageButtonElement.disabled = false;
