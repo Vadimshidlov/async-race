@@ -1,20 +1,17 @@
 import createElement from '../element/element-creator';
 
-export class CreateButtonElement {
-  private element: HTMLButtonElement;
+export interface ICreateButtonElement {
+    getElement: () => HTMLButtonElement
+}
 
-  // private readonly buttonText = 'Create';
+export class CreateButtonElement implements ICreateButtonElement {
+    private readonly element: HTMLButtonElement;
 
-  constructor(text: string) {
-    this.element = createElement({ tag: 'button', classNames: ['create-block__button'], text });
-    // this.configureElement();
-  }
+    constructor(text: string) {
+        this.element = createElement({tag: 'button', classNames: ['create-block__button'], text});
+    }
 
-  /* private configureElement(): void {
-    this.element.textContent = this.buttonText;
-  } */
-
-  public getElement(): HTMLButtonElement {
-    return this.element;
-  }
+    public getElement(): HTMLButtonElement {
+        return this.element;
+    }
 }

@@ -1,30 +1,35 @@
-import { CreateButtonElement } from '../create-input/create-button';
+import {CreateButtonElement} from '../create-input/create-button';
 import createElement from '../element/element-creator';
 
-export class PageCOntroller {
-  private toGarageButtonElement: HTMLButtonElement = new CreateButtonElement('Garage').getElement();
+export interface IPageController {
+    getPageControllerHTML: () => HTMLElement
+    getGarageButton: () => HTMLButtonElement
+    getWinnersButton: () => HTMLButtonElement
+}
 
-  private toWinnersButtonElement: HTMLButtonElement = new CreateButtonElement(
-    'Winners',
-  ).getElement();
+export class PageController implements IPageController {
+    private toGarageButtonElement: HTMLButtonElement = new CreateButtonElement('Garage').getElement();
 
-  public getPageControlleHTML(): HTMLElement {
-    const pageControllerblock = createElement({
-      tag: 'div',
-      classNames: ['header__page-controller', 'page-controller'],
-      text: '',
-    });
+    private toWinnersButtonElement: HTMLButtonElement = new CreateButtonElement(
+        'Winners',
+    ).getElement();
 
-    pageControllerblock.append(this.toGarageButtonElement, this.toWinnersButtonElement);
+    public getPageControllerHTML(): HTMLElement {
+        const pageControllerBlock = createElement({
+            tag: 'div',
+            classNames: ['header__page-controller', 'page-controller'],
+            text: '',
+        });
+        pageControllerBlock.append(this.toGarageButtonElement, this.toWinnersButtonElement);
 
-    return pageControllerblock;
-  }
+        return pageControllerBlock;
+    }
 
-  public getGarageButton(): HTMLButtonElement {
-    return this.toGarageButtonElement;
-  }
+    public getGarageButton(): HTMLButtonElement {
+        return this.toGarageButtonElement;
+    }
 
-  public getWinnersButton(): HTMLButtonElement {
-    return this.toWinnersButtonElement;
-  }
+    public getWinnersButton(): HTMLButtonElement {
+        return this.toWinnersButtonElement;
+    }
 }

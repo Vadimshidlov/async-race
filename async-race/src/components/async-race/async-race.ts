@@ -2,13 +2,15 @@ import getHeader from '../header/header';
 import '../../styles.scss';
 import createElement from '../element/element-creator';
 
-import {PageCOntroller} from '../PageController/PageController';
+import {PageController} from '../PageController/PageController';
 import {Garage} from '../garage/Garage';
 import {WinnersTable} from '../winners/Winners';
 
-export type RacePArtyType = () => Promise<number>;
+export interface IAsyncRace {
+    getHtmlPAge: () => void
+}
 
-export class AsyncRace {
+export class AsyncRace implements IAsyncRace {
     private body = document.body;
 
     private garageCurrentPage = 1;
@@ -21,9 +23,9 @@ export class AsyncRace {
 
     private garageElement = this.garage.getGarageHtml();
 
-    private pageController = new PageCOntroller();
+    private pageController = new PageController();
 
-    private pageControllerElement = this.pageController.getPageControlleHTML();
+    private pageControllerElement = this.pageController.getPageControllerHTML();
 
     private toGarageButton = this.pageController.getGarageButton();
 

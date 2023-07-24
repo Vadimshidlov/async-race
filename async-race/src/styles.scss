@@ -79,6 +79,7 @@ body {
       justify-content: space-between;
     }
   }
+
   .block-garage__info {
     padding: 5px;
     display: flex;
@@ -134,7 +135,7 @@ main {
     padding: 10px;
     font-size: 1.8rem;
 
-    .popup__mesage {
+    .popup__message {
     }
 
     .popup__button {
@@ -148,6 +149,10 @@ main {
       height: 20px;
       cursor: pointer;
       transition: all 0.5s;
+
+      @media (max-width: 650px) {
+        left: 91%;
+      }
 
       &:hover {
         border: 1px solid rebeccapurple;

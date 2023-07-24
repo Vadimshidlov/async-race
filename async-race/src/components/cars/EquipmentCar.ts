@@ -18,7 +18,23 @@ export type EquipmentPropsType = {
     selectCarCallback: () => void;
 };
 
-export class EquipmentCar {
+export interface IEquipmentCar {
+    deleteSelectedState: () => void
+    disableAllButtons: () => void
+    enableAllButtons: () => void
+    startRaceMoveCar: () => Promise<StartMoveResultType | void>
+    stopRaceMoveCar: () => Promise<void>
+    startSingleMoveCar: () => Promise<StartMoveResultType | void>
+    setCarName: (value: string) => void
+    getCar: () => HTMLElement
+    getCarId: () => number
+    setCarColor: (value: string) => void
+    setCarToInitialPlace: () => void
+    disableSelectButton: () => void
+    enableSelectButton: () => void
+}
+
+export class EquipmentCar implements IEquipmentCar {
     private readonly equipmentCar: HTMLElement;
 
     private readonly carNameElement: HTMLSpanElement;
@@ -181,6 +197,7 @@ export class EquipmentCar {
             if (countGarageCars === 0) {
                 this.garageController.disableRaceStartButton();
             }
+
         });
     }
 

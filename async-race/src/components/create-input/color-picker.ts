@@ -1,7 +1,14 @@
 import createElement from '../element/element-creator';
 import './create-block.scss';
 
-export class ColorPicker {
+export interface IColorPicker {
+    getInputValue: () => string
+    clearInputValue: () => void
+    setColorPickerValue: (value: string) => void
+    getElement: () => HTMLInputElement
+}
+
+export class ColorPicker implements IColorPicker {
     private readonly picker: HTMLInputElement;
 
     private colorHEX = '';
