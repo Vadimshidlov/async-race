@@ -1,5 +1,5 @@
-import {CreateButtonElement} from '../create-input/create-button';
-import createElement from '../element/element-creator';
+import {createButtonElement} from '../create-input/createButtonElement';
+import createElement from '../element/createElement';
 
 export interface IPageController {
     getPageControllerHTML: () => HTMLElement
@@ -8,11 +8,9 @@ export interface IPageController {
 }
 
 export class PageController implements IPageController {
-    private toGarageButtonElement: HTMLButtonElement = new CreateButtonElement('Garage').getElement();
+    private toGarageButtonElement: HTMLButtonElement = createButtonElement('Garage');
 
-    private toWinnersButtonElement: HTMLButtonElement = new CreateButtonElement(
-        'Winners',
-    ).getElement();
+    private toWinnersButtonElement: HTMLButtonElement = createButtonElement('Winners');
 
     public getPageControllerHTML(): HTMLElement {
         const pageControllerBlock = createElement({

@@ -1,3 +1,3 @@
-import {AsyncRace} from './components/async-race/async-race';
+import {AsyncRace} from './components/async-race/AsyncRace';
 
 const race = new AsyncRace();

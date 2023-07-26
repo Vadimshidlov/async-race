@@ -1,4 +1,4 @@
-import createElement from '../element/element-creator';
+import createElement from '../element/createElement';
 
 export interface ICreateInputElement {
     getInputValue: () => string

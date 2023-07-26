@@ -1,6 +1,6 @@
 import {EngineService} from '../../services/EngineService';
-import createElement from '../element/element-creator';
-import {getCarImage} from './get-car-image';
+import createElement from '../element/createElement';
+import {getCarImage} from './getCarImage';
 import {getEndpoint} from '../utils/getEmdpoint';
 
 export type StartMoveResultType = {
@@ -36,30 +36,6 @@ export class Car implements ICar {
         this.carName = carName;
         this.carElement = createElement({tag: 'div', classNames: ['car'], text: ''});
         this.configureElement(color);
-    }
-
-    private configureElement(color: string): void {
-        const car = getCarImage(color);
-
-        this.carElement.innerHTML = car;
-    }
-
-    private animate(duration: number): void {
-        const startTime = new Date().getTime();
-        const endPoint = getEndpoint();
-
-        const go = (): void => {
-            const currentTime = new Date().getTime();
-            const deltaTime = Math.min((currentTime - startTime) / this.MILI_SECONDS_NUMBER);
-
-            this.carElement.style.transform = `translateX(${(deltaTime * endPoint) / duration}%)`;
-
-            if (deltaTime <= duration) {
-                this.carAnimationId = requestAnimationFrame(go);
-            }
-        };
-
-        this.carAnimationId = requestAnimationFrame(go);
     }
 
     public async startMove(): Promise<StartMoveResultType | void> {
@@ -104,5 +80,29 @@ export class Car implements ICar {
         const newCar = getCarImage(colorValue);
 
         this.carElement.innerHTML = newCar;
+    }
+
+    private configureElement(color: string): void {
+        const car = getCarImage(color);
+
+        this.carElement.innerHTML = car;
+    }
+
+    private animate(duration: number): void {
+        const startTime = new Date().getTime();
+        const endPoint = getEndpoint();
+
+        const go = (): void => {
+            const currentTime = new Date().getTime();
+            const deltaTime = Math.min((currentTime - startTime) / this.MILI_SECONDS_NUMBER);
+
+            this.carElement.style.transform = `translateX(${(deltaTime * endPoint) / duration}%)`;
+
+            if (deltaTime <= duration) {
+                this.carAnimationId = requestAnimationFrame(go);
+            }
+        };
+
+        this.carAnimationId = requestAnimationFrame(go);
     }
 }

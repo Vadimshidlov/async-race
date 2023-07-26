@@ -1,7 +1,7 @@
-import {ColorPicker} from '../create-input/color-picker';
-import {CreateButtonElement} from '../create-input/create-button';
-import {CreateInputElement} from '../create-input/create-input';
-import createElement from '../element/element-creator';
+import {ColorPicker} from '../create-input/ColorPicker';
+import {createButtonElement} from '../create-input/createButtonElement';
+import {CreateInputElement} from '../create-input/CreateInputElement';
+import createElement from '../element/createElement';
 
 export type CreateCarValuesType = {
     textValue: string;
@@ -44,21 +44,19 @@ export class GarageController implements IGarageController {
 
     private readonly updateInputElement: HTMLInputElement;
 
-    private readonly createButtonElement: HTMLButtonElement = new CreateButtonElement(
+    private readonly createButtonElement: HTMLButtonElement = createButtonElement(
         'Create',
-    ).getElement();
+    );
 
-    private readonly updateButtonElement: HTMLButtonElement = new CreateButtonElement(
+    private readonly updateButtonElement: HTMLButtonElement = createButtonElement(
         'Update',
-    ).getElement();
+    );
 
-    private raceStartButtonElement: HTMLButtonElement = new CreateButtonElement('Race').getElement();
+    private raceStartButtonElement: HTMLButtonElement = createButtonElement('Race');
 
-    private raceResetButtonElement: HTMLButtonElement = new CreateButtonElement('Reset').getElement();
+    private raceResetButtonElement: HTMLButtonElement = createButtonElement('Reset');
 
-    private generateCarButtonElement: HTMLButtonElement = new CreateButtonElement(
-        'New Cars',
-    ).getElement();
+    private generateCarButtonElement: HTMLButtonElement = createButtonElement('New Cars');
 
     private createColorPicker = new ColorPicker();
 

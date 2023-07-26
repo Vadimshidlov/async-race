@@ -1,5 +1,5 @@
-import {getCarImage} from '../cars/get-car-image';
-import createElement from '../element/element-creator';
+import {getCarImage} from '../cars/getCarImage';
+import createElement from '../element/createElement';
 
 export type WinnerDataType = {
     // id: number;

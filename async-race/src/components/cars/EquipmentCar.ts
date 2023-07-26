@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/no-var-requires,global-require */
-import {CreateButtonElement} from '../create-input/create-button';
-import createElement from '../element/element-creator';
-import './car-field.scss';
-import {Car, StartMoveResultType} from './car';
+import {createButtonElement} from '../create-input/createButtonElement';
+import createElement from '../element/createElement';
+import {Car, StartMoveResultType} from './Car';
 import {GarageController} from '../GarageController/GarageController';
 import {GarageService} from '../../services/GarageService';
 import {WinnersService} from "../../services/WinnersService";
 
-const flag = require('../../assets/svg/flag.svg');
+import './car-field.scss';
+
+const FLAG = require('../../assets/svg/FLAG.svg');
 
 export type EquipmentPropsType = {
     carColor: string;
@@ -43,13 +44,13 @@ export class EquipmentCar implements IEquipmentCar {
 
     private readonly carElement: HTMLElement;
 
-    private startCarButton = new CreateButtonElement('Start').getElement();
+    private startCarButton = createButtonElement('Start');
 
-    private returnCarButton = new CreateButtonElement('Return').getElement();
+    private returnCarButton = createButtonElement('Return');
 
-    private selectCarButton = new CreateButtonElement('Select').getElement();
+    private selectCarButton = createButtonElement('Select');
 
-    private removeCarButton = new CreateButtonElement('Remove').getElement();
+    private removeCarButton = createButtonElement('Remove');
 
     private readonly carFieldId: string;
 
@@ -101,6 +102,74 @@ export class EquipmentCar implements IEquipmentCar {
         this.addEventsHandler();
     }
 
+    public deleteSelectedState(): void {
+        this.equipmentCar.classList.remove('car-filed__active');
+    }
+
+    public disableAllButtons(): void {
+        this.selectCarButton.disabled = true;
+        this.removeCarButton.disabled = true;
+        this.startCarButton.disabled = true;
+    }
+
+    public enableAllButtons(): void {
+        this.selectCarButton.disabled = false;
+        this.removeCarButton.disabled = false;
+        this.startCarButton.disabled = false;
+    }
+
+    public async startRaceMoveCar(): Promise<StartMoveResultType | void> {
+        const firstResultTime = await this.car.startMove();
+
+        return firstResultTime;
+    }
+
+    public async stopRaceMoveCar(): Promise<void> {
+        await this.car.stopMove();
+    }
+
+    public async startSingleMoveCar(): Promise<StartMoveResultType | void> {
+        this.garageController.disableControllerButtons();
+        this.garageController.disableCreateInput();
+        this.disableAllButtons();
+        this.returnCarButton.disabled = false;
+        const firstResultTime = await this.car.startMove();
+
+        return firstResultTime;
+    }
+
+    public setCarName(value: string): void {
+        this.carNameElement.textContent = value;
+        // TODO ?
+        this.carName = value;
+    }
+
+    public getCar(): HTMLElement {
+        return this.equipmentCar;
+    }
+
+    public getCarId(): number {
+        return this.car.getCarId();
+    }
+
+    public setCarColor(value: string): void {
+        this.car.setCarColor(value);
+        // TODO ?
+        this.carColor = value;
+    }
+
+    public setCarToInitialPlace(): void {
+        this.car.setToStartPosition();
+    }
+
+    public disableSelectButton(): void {
+        this.selectCarButton.disabled = true;
+    }
+
+    public enableSelectButton(): void {
+        this.selectCarButton.disabled = false;
+    }
+
     private configureElement(): void {
         const carControllers = createElement({
             tag: 'div',
@@ -130,14 +199,12 @@ export class EquipmentCar implements IEquipmentCar {
             classNames: ['car-filed_road'],
             text: '',
         });
-        const flagImage = createElement({
+        const flagImage = createElement<HTMLImageElement>({
             tag: 'img',
             classNames: ['car-filed__flag'],
             text: '',
         });
-        if (flagImage instanceof HTMLImageElement) {
-            flagImage.src = flag;
-        }
+        flagImage.src = FLAG;
 
         roadWrapper.append(this.carElement, flagImage);
 
@@ -173,6 +240,7 @@ export class EquipmentCar implements IEquipmentCar {
 
         this.removeCarButton.addEventListener('click', async () => {
             const removeCarId = this.car.getCarId()
+
             // TODO delete winner with try catch
             try {
                 await this.winnerService.getWinner(removeCarId)
@@ -189,10 +257,10 @@ export class EquipmentCar implements IEquipmentCar {
             this.garageController.disableUpdateInput();
             this.garageController.enableCreateInput();
             const countGarageCars = await this.carGarageService.getCountCars();
+
             if (countGarageCars === 0) {
                 this.garageController.disableRaceStartButton();
             }
-
         });
     }
 
@@ -200,74 +268,8 @@ export class EquipmentCar implements IEquipmentCar {
         this.equipmentCar.classList.add('car-filed__active');
     }
 
-    public deleteSelectedState(): void {
-        this.equipmentCar.classList.remove('car-filed__active');
-    }
-
-    public disableAllButtons(): void {
-        this.selectCarButton.disabled = true;
-        this.removeCarButton.disabled = true;
-        this.startCarButton.disabled = true;
-    }
-
-    public enableAllButtons(): void {
-        this.selectCarButton.disabled = false;
-        this.removeCarButton.disabled = false;
-        this.startCarButton.disabled = false;
-    }
-
-    public async startRaceMoveCar(): Promise<StartMoveResultType | void> {
-        const firstResultTime = await this.car.startMove();
-        return firstResultTime;
-    }
-
-    public async stopRaceMoveCar(): Promise<void> {
-        await this.car.stopMove();
-    }
-
-    public async startSingleMoveCar(): Promise<StartMoveResultType | void> {
-        this.garageController.disableControllerButtons();
-        this.garageController.disableCreateInput();
-        this.disableAllButtons();
-        this.returnCarButton.disabled = false;
-        const firstResultTime = await this.car.startMove();
-
-        return firstResultTime;
-    }
-
-    public setCarName(value: string): void {
-        this.carNameElement.textContent = value;
-        // TODO ?
-        this.carName = value;
-    }
 
     private setCarId(id: number): void {
         this.carElement.id = `${id}`;
-    }
-
-    public getCar(): HTMLElement {
-        return this.equipmentCar;
-    }
-
-    public getCarId(): number {
-        return this.car.getCarId();
-    }
-
-    public setCarColor(value: string): void {
-        this.car.setCarColor(value);
-        // TODO ?
-        this.carColor = value;
-    }
-
-    public setCarToInitialPlace(): void {
-        this.car.setToStartPosition();
-    }
-
-    public disableSelectButton(): void {
-        this.selectCarButton.disabled = true;
-    }
-
-    public enableSelectButton(): void {
-        this.selectCarButton.disabled = false;
     }
 }

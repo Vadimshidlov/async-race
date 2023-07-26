@@ -1,9 +1,9 @@
 import {GarageService, GetCarsType} from '../../services/GarageService';
 import {WinnersService} from '../../services/WinnersService';
-import {StartMoveResultType} from '../cars/car';
+import {StartMoveResultType} from '../cars/Car';
 import {EquipmentCar} from '../cars/EquipmentCar';
-import {CreateButtonElement} from '../create-input/create-button';
-import createElement from '../element/element-creator';
+import {createButtonElement} from '../create-input/createButtonElement';
+import createElement from '../element/createElement';
 import {GarageController} from '../GarageController/GarageController';
 import {getRandomCarName} from '../genereteCars/generateCarName';
 import {generateColor} from '../genereteCars/generateColor';
@@ -70,9 +70,9 @@ export class Garage implements IGarage {
 
     private garageCurrentPage;
 
-    private prevPageButtonElement: HTMLButtonElement = new CreateButtonElement('Prev').getElement();
+    private prevPageButtonElement: HTMLButtonElement = createButtonElement('Prev');
 
-    private nextPageButtonElement: HTMLButtonElement = new CreateButtonElement('Next').getElement();
+    private nextPageButtonElement: HTMLButtonElement = createButtonElement('Next');
 
     private winnerService = new WinnersService();
 
@@ -149,6 +149,7 @@ export class Garage implements IGarage {
 
     private async addSingleCar(newCarData: GetCarsType): Promise<void> {
         const carsPageCount = (await this.carGarageApi.getCars(this.garageCurrentPage)).length;
+
         if (carsPageCount <= this.GARAGE_PAGE_LIMIT) {
             const equipmentProps = {
                 carColor: newCarData.color,
@@ -168,9 +169,11 @@ export class Garage implements IGarage {
 
     private addEventListeners(): void {
         this.nextPageButtonElement.addEventListener('click', async () => {
+
             if (this.garageCurrentPage === 1) {
                 this.prevPageButtonElement.disabled = false;
             }
+
             const carsGarageCount = await this.carGarageApi.getCountCars();
             this.garageCurrentPage += this.DELTA_INDEX_NUMBER;
             await this.getCars(this.garageCurrentPage);
@@ -183,24 +186,29 @@ export class Garage implements IGarage {
         this.prevPageButtonElement.addEventListener('click', async () => {
             if (this.garageCurrentPage !== 1) {
                 const carsGarageCount = await this.carGarageApi.getCountCars();
+
                 if (this.garageCurrentPage === Math.ceil(carsGarageCount / 7)) {
                     this.nextPageButtonElement.disabled = false;
                 }
 
                 this.garageCurrentPage -= this.DELTA_INDEX_NUMBER;
+
                 if (this.garageCurrentPage === 1) {
                     this.prevPageButtonElement.disabled = true;
                 }
+
                 await this.getCars(this.garageCurrentPage);
             }
         });
 
         this.createButtonElement.addEventListener('click', async () => {
             const newCarData = this.garageController.getCreateCarValues();
+
             if (newCarData.textValue === '') {
                 this.garageController.setCreateInputFailedState();
                 return;
             }
+
             const responseNewCarData = await this.carGarageApi.createCar(
                 newCarData.textValue,
                 newCarData.colorValue,
@@ -208,6 +216,7 @@ export class Garage implements IGarage {
 
             const carsGarageCount = await this.carGarageApi.getCountCars();
             this.setGarageCarsCount(carsGarageCount);
+
             if (carsGarageCount <= this.GARAGE_PAGE_LIMIT || this.raceParty.length < this.GARAGE_PAGE_LIMIT) {
                 await this.addSingleCar(responseNewCarData);
             }
@@ -217,9 +226,11 @@ export class Garage implements IGarage {
             }
 
             const countGarageCars = await this.carGarageApi.getCountCars();
+
             if (countGarageCars > 0) {
                 this.garageController.enableRaceStartButton();
             }
+
             this.garageController.clearCreateInputValues();
             await this.setGaragePageNumber(this.garageCurrentPage)
         });
@@ -257,6 +268,7 @@ export class Garage implements IGarage {
             } else {
                 this.showWinnerPopup();
             }
+
         });
 
         this.raceResetButtonElement.addEventListener('click', () => {
@@ -325,6 +337,7 @@ export class Garage implements IGarage {
 
         const carsGarageCount = await this.carGarageApi.getCountCars();
         this.setGarageCarsCount(carsGarageCount);
+
         if (beforeGenerateCarCount < this.GARAGE_PAGE_LIMIT) {
             await this.getCars();
         }
@@ -337,6 +350,7 @@ export class Garage implements IGarage {
 
     private async enablePageControllerButtons(): Promise<void> {
         const carsGarageCount = await this.carGarageApi.getCountCars();
+
         if (this.garageCurrentPage === 1) {
             this.prevPageButtonElement.disabled = true;
         } else {
@@ -348,6 +362,7 @@ export class Garage implements IGarage {
         } else {
             this.nextPageButtonElement.disabled = false;
         }
+
     }
 
 
@@ -374,7 +389,6 @@ export class Garage implements IGarage {
             this.raceParty.push(equipmentCar);
             this.garage.append(car);
         });
-
 
         if (carsGarageCount > this.GARAGE_PAGE_LIMIT && this.garageCurrentPage === 1) {
             this.prevPageButtonElement.disabled = true;
@@ -425,6 +439,7 @@ export class Garage implements IGarage {
                 raceMember.setCarColor(updateColorValue);
                 raceMember.deleteSelectedState();
             }
+
         });
 
         this.updateButtonElement.disabled = true;
@@ -482,6 +497,7 @@ export class Garage implements IGarage {
             this.popupMessage.remove();
             this.raceResetButtonElement.disabled = false;
         }
+
     }
 
     private async setGaragePageNumber(value: number): Promise<void> {

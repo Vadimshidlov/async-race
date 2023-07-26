@@ -1,4 +1,4 @@
-import createElement from '../element/element-creator';
+import createElement from '../element/createElement';
 import './create-block.scss';
 
 export interface IColorPicker {

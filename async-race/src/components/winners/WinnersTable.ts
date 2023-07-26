@@ -1,9 +1,9 @@
 import {GarageService} from '../../services/GarageService';
 import {GetWinnersPropsType, WinnersService} from '../../services/WinnersService';
-import createElement from '../element/element-creator';
+import createElement from '../element/createElement';
 import {WinnerDataType, WinnersItem} from './WinnerItem';
 import './winners.scss';
-import {CreateButtonElement} from '../create-input/create-button';
+import {createButtonElement} from '../create-input/createButtonElement';
 
 export type SetWinnersCurrentPageType = (value: number) => void
 
@@ -65,9 +65,9 @@ export class WinnersTable implements IWinnersTable {
 
     private garageService = new GarageService();
 
-    private prevPageButtonElement: HTMLButtonElement = new CreateButtonElement('Prev').getElement();
+    private prevPageButtonElement: HTMLButtonElement = createButtonElement('Prev');
 
-    private nextPageButtonElement: HTMLButtonElement = new CreateButtonElement('Next').getElement();
+    private nextPageButtonElement: HTMLButtonElement = createButtonElement('Next');
 
     private winnersCurrentPage: number;
 
@@ -166,6 +166,7 @@ export class WinnersTable implements IWinnersTable {
 
     private async disableControllerButtons(): Promise<void> {
         const winnersCount = await this.winnersService.getWinnersCount();
+
         if (this.winnersCurrentPage === 1) {
             this.prevPageButtonElement.disabled = true;
         } else {
@@ -177,6 +178,7 @@ export class WinnersTable implements IWinnersTable {
         } else {
             this.nextPageButtonElement.disabled = false;
         }
+
     }
 
     public async addWinners({
@@ -232,10 +234,10 @@ export class WinnersTable implements IWinnersTable {
 
     private addEventListeners(): void {
         this.nextPageButtonElement.addEventListener('click', async () => {
-
             this.winnersCurrentPage += this.DELTA_INDEX_NUMBER;
             this.setWinnersCurrentPage(this.winnersCurrentPage)
             this.winnersTableBody.innerHTML = '';
+
             await this.addWinners({
                 page: this.winnersCurrentPage,
                 limit: this.WINNERS_PAGE_LIMIT,
@@ -248,6 +250,7 @@ export class WinnersTable implements IWinnersTable {
             this.winnersCurrentPage -= this.DELTA_INDEX_NUMBER;
             this.setWinnersCurrentPage(this.winnersCurrentPage)
             this.winnersTableBody.innerHTML = '';
+
             await this.addWinners({
                 page: this.winnersCurrentPage,
                 limit: this.WINNERS_PAGE_LIMIT,
