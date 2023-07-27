@@ -1,47 +1,59 @@
 import createElement from '../element/createElement';
 
 export interface ICreateInputElement {
-    getInputValue: () => string
-    setInputValue: (value: string) => void
-    clearInputValue: () => void
-    getElement: () => HTMLInputElement
-    setFailedState: () => void
+  getInputValue: () => string;
+  setInputValue: (value: string) => void;
+  clearInputValue: () => void;
+  getElement: () => HTMLInputElement;
+  setFailedState: () => void;
 }
 
 export class CreateInputElement implements ICreateInputElement {
-    private readonly element: HTMLInputElement;
+  private readonly element: HTMLInputElement;
 
-    private readonly inputPlaceholder = 'Write name';
+  private readonly INPUT_TAG = 'input';
 
-    constructor() {
-        this.element = createElement({tag: 'input', classNames: ['create-block__input'], text: ''});
-        this.configureElement();
-    }
+  private readonly INPUT_PLACEHOLDER = 'Write name';
 
-    private configureElement(): void {
-        this.element.placeholder = this.inputPlaceholder;
-    }
+  private readonly FAILED_STATE_TIMEOUT = 500;
 
-    public getInputValue(): string {
-        return this.element.value;
-    }
+  private readonly INPUT_CLASSNAME = 'create-block__input';
 
-    public setInputValue(value: string): void {
-        this.element.value = value;
-    }
+  private readonly INPUT_FAILED_CLASSNAME = 'create-block__input__failed';
 
-    public clearInputValue(): void {
-        this.element.value = '';
-    }
+  constructor() {
+    this.element = createElement({
+      tag: this.INPUT_TAG,
+      classNames: [this.INPUT_CLASSNAME],
+      text: '',
+    });
+    this.configureElement();
+  }
 
-    public getElement(): HTMLInputElement {
-        return this.element;
-    }
+  public getInputValue(): string {
+    return this.element.value;
+  }
 
-    public setFailedState(): void {
-        this.element.classList.add('create-block__input__failed');
-        setTimeout(() => {
-            this.element.classList.remove('create-block__input__failed');
-        }, 500);
-    }
+  public setInputValue(value: string): void {
+    this.element.value = value;
+  }
+
+  public clearInputValue(): void {
+    this.element.value = '';
+  }
+
+  public getElement(): HTMLInputElement {
+    return this.element;
+  }
+
+  public setFailedState(): void {
+    this.element.classList.add(this.INPUT_FAILED_CLASSNAME);
+    setTimeout(() => {
+      this.element.classList.remove(this.INPUT_FAILED_CLASSNAME);
+    }, this.FAILED_STATE_TIMEOUT);
+  }
+
+  private configureElement(): void {
+    this.element.placeholder = this.INPUT_PLACEHOLDER;
+  }
 }
