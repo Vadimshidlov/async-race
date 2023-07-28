@@ -58,17 +58,19 @@ export class GarageController implements IGarageController {
 
     private generateCarButtonElement: HTMLButtonElement = createButtonElement('New Cars');
 
-    private createColorPicker = new ColorPicker();
+    private createColorPicker: ColorPicker = new ColorPicker();
 
     private readonly createColorPickerElement: HTMLInputElement;
 
-    private updateColorPicker = new ColorPicker();
+    private updateColorPicker: ColorPicker = new ColorPicker();
 
     private readonly updateColorPickerElement: HTMLElement;
 
     private updateSelectCarId: number | null = null;
 
     private updateSelectCarName: string | null = null;
+
+    private readonly MISSED_CAR_ID_MESSAGE: string = 'Update car Id is not defined';
 
     constructor() {
         this.createInputElement = this.createInput.getElement();
@@ -237,7 +239,7 @@ export class GarageController implements IGarageController {
 
     public getUpdateSelectCarId(): number {
         if (!this.updateSelectCarId) {
-            throw new Error('Update car Id is not defined');
+            throw new Error(this.MISSED_CAR_ID_MESSAGE);
         }
 
         return this.updateSelectCarId;

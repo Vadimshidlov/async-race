@@ -12,10 +12,14 @@ export class PageController implements IPageController {
 
     private toWinnersButtonElement: HTMLButtonElement = createButtonElement('Winners');
 
+    private readonly pageControllerClassnamesList: string[] = ['header__page-controller', 'page-controller']
+
+    private readonly PAGE_CONTROLLER_TAG: string = 'div';
+
     public getPageControllerHTML(): HTMLElement {
-        const pageControllerBlock = createElement({
-            tag: 'div',
-            classNames: ['header__page-controller', 'page-controller'],
+        const pageControllerBlock: HTMLElement = createElement({
+            tag: this.PAGE_CONTROLLER_TAG,
+            classNames: this.pageControllerClassnamesList,
             text: '',
         });
         pageControllerBlock.append(this.toGarageButtonElement, this.toWinnersButtonElement);

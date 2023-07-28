@@ -1,7 +1,7 @@
 import {GarageService} from '../../services/GarageService';
 import {GetWinnersPropsType, WinnersService} from '../../services/WinnersService';
 import createElement from '../element/createElement';
-import {WinnerDataType, WinnersItem} from './WinnerItem';
+import {WinnerDataType, WinnerTableRow} from './WinnerTableRow';
 import './winners.scss';
 import {createButtonElement} from '../create-input/createButtonElement';
 
@@ -31,7 +31,7 @@ export class WinnersTable implements IWinnersTable {
         text: '',
     });
 
-    private winnersTableBody = createElement({
+    private winnersTableBody: HTMLElement = createElement({
         tag: 'tbody',
         classNames: ['winners__table-body'],
         text: '',
@@ -49,21 +49,21 @@ export class WinnersTable implements IWinnersTable {
         text: 'Page: 1',
     });
 
-    private winnerWinsHeader = createElement({
+    private winnerWinsHeader: HTMLElement = createElement({
         tag: 'th',
         classNames: ['table-header__wins'],
         text: `Wins`,
     });
 
-    private winnerTimeHeader = createElement({
+    private winnerTimeHeader: HTMLElement = createElement({
         tag: 'th',
         classNames: ['table-header__time'],
         text: `Best time (sec)`,
     });
 
-    private winnersService = new WinnersService();
+    private winnersService: WinnersService = new WinnersService();
 
-    private garageService = new GarageService();
+    private garageService: GarageService = new GarageService();
 
     private prevPageButtonElement: HTMLButtonElement = createButtonElement('Prev');
 
@@ -71,15 +71,17 @@ export class WinnersTable implements IWinnersTable {
 
     private winnersCurrentPage: number;
 
-    private WINNERS_PAGE_LIMIT = 10;
-
-    private DELTA_INDEX_NUMBER = 1;
-
     private winnersSortParam = 'time';
 
     private winnersSortOrder = 'ASC';
 
     private readonly setWinnersCurrentPage: SetWinnersCurrentPageType;
+
+    private readonly FIRST_PAGE = 1;
+
+    private WINNERS_PAGE_LIMIT = 10;
+
+    private DELTA_INDEX_NUMBER = 1;
 
     constructor(currentPage: number, setWinnersCurrentPage: SetWinnersCurrentPageType) {
         this.configureView();
@@ -167,7 +169,7 @@ export class WinnersTable implements IWinnersTable {
     private async disableControllerButtons(): Promise<void> {
         const winnersCount = await this.winnersService.getWinnersCount();
 
-        if (this.winnersCurrentPage === 1) {
+        if (this.winnersCurrentPage === this.FIRST_PAGE) {
             this.prevPageButtonElement.disabled = true;
         } else {
             this.prevPageButtonElement.disabled = false;
@@ -188,7 +190,6 @@ export class WinnersTable implements IWinnersTable {
                                 order = this.winnersSortOrder,
                             }: GetWinnersPropsType): Promise<void> {
         await this.disableControllerButtons();
-
         const winnersCount = await this.winnersService.getWinnersCount();
         await this.setCurrentPageAndCount(winnersCount, this.winnersCurrentPage);
 
@@ -197,6 +198,7 @@ export class WinnersTable implements IWinnersTable {
         const carParamsList = await Promise.all(
             winnersIdList.map((winnerData) => this.garageService.getCar(winnerData)),
         );
+
         const res: WinnerDataType[] = [];
         carParamsList.forEach((carParams, firstIndex) => {
             winnersDataList.forEach((winnerData) => {
@@ -218,7 +220,7 @@ export class WinnersTable implements IWinnersTable {
         });
 
         res.forEach((resultWinnerData) => {
-            const winner = new WinnersItem(resultWinnerData);
+            const winner = new WinnerTableRow(resultWinnerData);
             const winnerElement = winner.getWinnerHtml();
             this.winnersTableBody.append(winnerElement);
         });

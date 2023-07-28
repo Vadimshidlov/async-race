@@ -22,8 +22,8 @@ export class EngineService extends CommonService implements IEngineService {
     }
 
     public async startEngine(id: number): Promise<StartEngineType> {
-        const URL_PARAMS = `id=${id}&status=started`;
-        const response = await fetch(`${this.API_ENGINE_URL}?${URL_PARAMS}`, {
+        const urlParams = `id=${id}&status=started`;
+        const response: Response = await fetch(`${this.API_ENGINE_URL}?${urlParams}`, {
             method: 'PATCH',
         });
 
@@ -31,8 +31,8 @@ export class EngineService extends CommonService implements IEngineService {
     }
 
     public async stopEngine(id: number): Promise<StartEngineType> {
-        const URL_PARAMS = `id=${id}&status=stopped`;
-        const response = await fetch(`${this.API_ENGINE_URL}?${URL_PARAMS}`, {
+        const urlParams = `id=${id}&status=stopped`;
+        const response: Response = await fetch(`${this.API_ENGINE_URL}?${urlParams}`, {
             method: 'PATCH',
         });
 
@@ -40,8 +40,8 @@ export class EngineService extends CommonService implements IEngineService {
     }
 
     public async driveEngine(id: number): Promise<Response> {
-        const URL_PARAMS = `id=${id}&status=drive`;
-        const response = await fetch(`${this.API_ENGINE_URL}?${URL_PARAMS}`, {
+        const urlParams = `id=${id}&status=drive`;
+        const response: Response = await fetch(`${this.API_ENGINE_URL}?${urlParams}`, {
             method: 'PATCH',
         });
 

@@ -44,21 +44,19 @@ export class EquipmentCar implements IEquipmentCar {
 
     private readonly carElement: HTMLElement;
 
-    private startCarButton = createButtonElement('Start');
+    private startCarButton: HTMLButtonElement = createButtonElement('Start');
 
-    private returnCarButton = createButtonElement('Return');
+    private returnCarButton: HTMLButtonElement = createButtonElement('Return');
 
-    private selectCarButton = createButtonElement('Select');
+    private selectCarButton: HTMLButtonElement = createButtonElement('Select');
 
-    private removeCarButton = createButtonElement('Remove');
-
-    private readonly carFieldId: string;
+    private removeCarButton: HTMLButtonElement = createButtonElement('Remove');
 
     private garageController: GarageController;
 
     private carName: string;
 
-    private carGarageService = new GarageService();
+    private carGarageApi: GarageService = new GarageService();
 
     private readonly deleteCarsCallback: () => Promise<void>;
 
@@ -66,7 +64,11 @@ export class EquipmentCar implements IEquipmentCar {
 
     private carColor: string;
 
-    private winnerService = new WinnersService();
+    private winnersApi: WinnersService = new WinnersService();
+
+    private readonly ZERO_NUMBER = 0;
+
+    private readonly CAR_FIELD_ID: string;
 
     constructor({
                     carColor,
@@ -81,10 +83,10 @@ export class EquipmentCar implements IEquipmentCar {
             classNames: ['car-filed'],
             text: '',
         });
-        this.carFieldId = `carField-${id}`;
+        this.CAR_FIELD_ID = `carField-${id}`;
         this.carName = carName;
         this.carColor = carColor;
-        this.equipmentCar.id = this.carFieldId;
+        this.equipmentCar.id = this.CAR_FIELD_ID;
         this.deleteCarsCallback = deleteCarsCallback;
         this.selectCarCallback = selectCarCallback;
 
@@ -95,6 +97,7 @@ export class EquipmentCar implements IEquipmentCar {
             classNames: ['car-filed__name'],
             text: 'Tesla',
         });
+
         this.garageController = garageController;
         this.configureElement();
         this.setCarName(carName);
@@ -119,7 +122,7 @@ export class EquipmentCar implements IEquipmentCar {
     }
 
     public async startRaceMoveCar(): Promise<StartMoveResultType | void> {
-        const firstResultTime = await this.car.startMove();
+        const firstResultTime: void | StartMoveResultType = await this.car.startMove();
 
         return firstResultTime;
     }
@@ -133,14 +136,13 @@ export class EquipmentCar implements IEquipmentCar {
         this.garageController.disableCreateInput();
         this.disableAllButtons();
         this.returnCarButton.disabled = false;
-        const firstResultTime = await this.car.startMove();
+        const firstResultTime: void | StartMoveResultType = await this.car.startMove();
 
         return firstResultTime;
     }
 
     public setCarName(value: string): void {
         this.carNameElement.textContent = value;
-        // TODO ?
         this.carName = value;
     }
 
@@ -154,7 +156,6 @@ export class EquipmentCar implements IEquipmentCar {
 
     public setCarColor(value: string): void {
         this.car.setCarColor(value);
-        // TODO ?
         this.carColor = value;
     }
 
@@ -171,35 +172,35 @@ export class EquipmentCar implements IEquipmentCar {
     }
 
     private configureElement(): void {
-        const carControllers = createElement({
+        const carControllers: HTMLElement = createElement({
             tag: 'div',
             classNames: ['car-filed__controller', 'controller'],
             text: '',
         });
 
-        const stateControllersBtns = createElement({
+        const stateControllerButtons: HTMLElement = createElement({
             tag: 'div',
             classNames: ['controller-state'],
             text: '',
         });
 
-        const moveControllersBtns = createElement({
+        const moveControllerButtons: HTMLElement = createElement({
             tag: 'div',
             classNames: ['controller-move'],
             text: '',
         });
 
-        stateControllersBtns.append(this.selectCarButton, this.removeCarButton, this.carNameElement);
-        moveControllersBtns.append(this.startCarButton, this.returnCarButton);
+        stateControllerButtons.append(this.selectCarButton, this.removeCarButton, this.carNameElement);
+        moveControllerButtons.append(this.startCarButton, this.returnCarButton);
         this.returnCarButton.disabled = true;
-        carControllers.append(stateControllersBtns, moveControllersBtns);
+        carControllers.append(stateControllerButtons, moveControllerButtons);
 
-        const roadWrapper = createElement({
+        const roadWrapper: HTMLElement = createElement({
             tag: 'div',
             classNames: ['car-filed_road'],
             text: '',
         });
-        const flagImage = createElement<HTMLImageElement>({
+        const flagImage: HTMLImageElement = createElement<HTMLImageElement>({
             tag: 'img',
             classNames: ['car-filed__flag'],
             text: '',
@@ -229,7 +230,7 @@ export class EquipmentCar implements IEquipmentCar {
             this.setSelectedState();
             this.selectCarCallback();
             this.garageController.enableUpdateInput();
-            const garageControllerUpdateButton = this.garageController.getUpdateCarButton();
+            const garageControllerUpdateButton: HTMLButtonElement = this.garageController.getUpdateCarButton();
             this.garageController.setUpdateInputValue(this.carName, this.carColor);
             garageControllerUpdateButton.disabled = false;
             this.garageController.disableControllerButtons();
@@ -239,26 +240,24 @@ export class EquipmentCar implements IEquipmentCar {
         });
 
         this.removeCarButton.addEventListener('click', async () => {
-            const removeCarId = this.car.getCarId()
+            const removeCarId: number = this.car.getCarId()
 
-            // TODO delete winner with try catch
             try {
-                await this.winnerService.getWinner(removeCarId)
-                await this.winnerService.deleteWinner(removeCarId)
-                await this.carGarageService.deleteCar(removeCarId);
+                await this.winnersApi.getWinner(removeCarId)
+                await this.winnersApi.deleteWinner(removeCarId)
+                await this.carGarageApi.deleteCar(removeCarId);
             } catch (error) {
-                await this.carGarageService.deleteCar(removeCarId);
+                await this.carGarageApi.deleteCar(removeCarId);
             }
-
 
             this.garageController.enableControllerButtons();
             await this.deleteCarsCallback();
             this.garageController.clearUpdateInputValues();
             this.garageController.disableUpdateInput();
             this.garageController.enableCreateInput();
-            const countGarageCars = await this.carGarageService.getCountCars();
+            const countGarageCars: number = await this.carGarageApi.getCountCars();
 
-            if (countGarageCars === 0) {
+            if (countGarageCars === this.ZERO_NUMBER) {
                 this.garageController.disableRaceStartButton();
             }
         });

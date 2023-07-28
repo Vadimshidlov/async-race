@@ -41,14 +41,16 @@ export class WinnersService extends CommonService implements IWinnersService {
 
     private readonly API_WINNERS_URL: string;
 
+    private readonly FIRST_PAGE = 1
+
     constructor() {
         super();
         this.API_WINNERS_URL = `${this.API_URL}${this.WINNERS_URL}`
     }
 
-    public async getWinnersCount(page = 1, limit = this.DEFAULT_WINNERS_LIMIT): Promise<number> {
-        const URL_PARAMS = `_page=${page}&_limit=${limit}`;
-        const response = await fetch(`${this.API_WINNERS_URL}?${URL_PARAMS}`);
+    public async getWinnersCount(page = this.FIRST_PAGE, limit = this.DEFAULT_WINNERS_LIMIT): Promise<number> {
+        const urlParams = `_page=${page}&_limit=${limit}`;
+        const response: Response = await fetch(`${this.API_WINNERS_URL}?${urlParams}`);
 
         return Number(response.headers.get('X-Total-Count'));
     }
@@ -61,17 +63,16 @@ export class WinnersService extends CommonService implements IWinnersService {
             order = 'ASC',
         }: GetWinnersPropsType
     ): Promise<WinnersType[]> {
-        const URL_PARAMS = `_page=${page}&_limit=${limit}&_sort=${sort}&_order=${order}`;
-        const response = await fetch(`${this.API_WINNERS_URL}?${URL_PARAMS}`);
+        const urlParams = `_page=${page}&_limit=${limit}&_sort=${sort}&_order=${order}`;
+        const response: Response = await fetch(`${this.API_WINNERS_URL}?${urlParams}`);
 
         return response.json();
     }
 
     public async getWinner(id: number): Promise<WinnersType> {
-        const URL_PARAMS = `${id}`;
-        const response = await fetch(`${this.API_WINNERS_URL}/${URL_PARAMS}`);
+        const urlParams = `${id}`;
+        const response: Response = await fetch(`${this.API_WINNERS_URL}/${urlParams}`);
 
-        // TODO network error?
         if (!response.ok) {
             throw Error('This machine has never been a winner');
         }
@@ -80,7 +81,7 @@ export class WinnersService extends CommonService implements IWinnersService {
     }
 
     public async createWinner(id: number, wins: number, time: number): Promise<StartEngineType> {
-        const response = await fetch(this.API_WINNERS_URL, {
+        const response: Response = await fetch(this.API_WINNERS_URL, {
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -96,8 +97,8 @@ export class WinnersService extends CommonService implements IWinnersService {
     }
 
     public async deleteWinner(id: number): Promise<object> {
-        const URL_PARAMS = `/${id}`;
-        const response = await fetch(`${this.API_WINNERS_URL}${URL_PARAMS}`, {
+        const urlParams = `/${id}`;
+        const response: Response = await fetch(`${this.API_WINNERS_URL}${urlParams}`, {
             method: 'DELETE',
         });
 
@@ -105,8 +106,8 @@ export class WinnersService extends CommonService implements IWinnersService {
     }
 
     public async updateWinner(id: number, wins: number, time: number): Promise<object> {
-        const URL_PARAMS = `/${id}`;
-        const response = await fetch(`${this.API_WINNERS_URL}${URL_PARAMS}`, {
+        const urlParams = `/${id}`;
+        const response: Response = await fetch(`${this.API_WINNERS_URL}${urlParams}`, {
             headers: {
                 'Content-Type': 'application/json',
             },

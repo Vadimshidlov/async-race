@@ -1,10 +1,5 @@
 import {CommonService} from "./CommonService";
 
-export type StartEngineType = {
-    velocity: string;
-    distance: string;
-};
-
 export type GetCarsType = {
     name: string;
     color: string;
@@ -33,34 +28,36 @@ export class GarageService extends CommonService implements IGarageService {
 
     private readonly API_GARAGE_URL: string;
 
+    private readonly FIRST_PAGE = 1;
+
     constructor() {
         super();
         this.API_GARAGE_URL = `${this.API_URL}${this.GARAGE_URL}`
     }
 
-    public async getCountCars(page = 1, limit = this.DEFAULT_CAR_LIMIT): Promise<number> {
-        const URL_PARAMS = `_page=${page}&_limit=${limit}`;
-        const response = await fetch(`${this.API_GARAGE_URL}?${URL_PARAMS}`);
+    public async getCountCars(page = this.FIRST_PAGE, limit = this.DEFAULT_CAR_LIMIT): Promise<number> {
+        const urlParams = `_page=${page}&_limit=${limit}`;
+        const response: Response = await fetch(`${this.API_GARAGE_URL}?${urlParams}`);
 
         return Number(response.headers.get('X-Total-Count'));
     }
 
-    public async getCars(page = 1, limit = this.DEFAULT_CAR_LIMIT): Promise<GetCarsType[]> {
-        const URL_PARAMS = `_page=${page}&_limit=${limit}`;
-        const response = await fetch(`${this.API_GARAGE_URL}?${URL_PARAMS}`);
+    public async getCars(page = this.FIRST_PAGE, limit = this.DEFAULT_CAR_LIMIT): Promise<GetCarsType[]> {
+        const urlParams = `_page=${page}&_limit=${limit}`;
+        const response: Response = await fetch(`${this.API_GARAGE_URL}?${urlParams}`);
 
         return response.json();
     }
 
     public async getCar(id: number): Promise<GetCarsType> {
-        const URL_PARAMS = `/${id}`;
-        const response = await fetch(`${this.API_GARAGE_URL}${URL_PARAMS}`);
+        const urlParams = `/${id}`;
+        const response: Response = await fetch(`${this.API_GARAGE_URL}${urlParams}`);
 
         return response.json();
     }
 
     public async createCar(name: string, color: string): Promise<GetCarsType> {
-        const response = await fetch(this.API_GARAGE_URL, {
+        const response: Response = await fetch(this.API_GARAGE_URL, {
             body: JSON.stringify({name, color}),
             headers: {
                 'Content-Type': 'application/json',
@@ -72,8 +69,8 @@ export class GarageService extends CommonService implements IGarageService {
     }
 
     public async deleteCar(id: number): Promise<object> {
-        const URL_PARAMS = `/${id}`;
-        const response = await fetch(`${this.API_GARAGE_URL}${URL_PARAMS}`, {
+        const urlParams = `/${id}`;
+        const response: Response = await fetch(`${this.API_GARAGE_URL}${urlParams}`, {
             method: 'DELETE',
         });
 
@@ -81,8 +78,8 @@ export class GarageService extends CommonService implements IGarageService {
     }
 
     public async updateCar(id: number, name: string, color: string): Promise<UpdateCarType> {
-        const URL_PARAMS = `/${id}`;
-        const response = await fetch(`${this.API_GARAGE_URL}${URL_PARAMS}`, {
+        const urlParams = `/${id}`;
+        const response: Response = await fetch(`${this.API_GARAGE_URL}${urlParams}`, {
             headers: {
                 'Content-Type': 'application/json',
             },

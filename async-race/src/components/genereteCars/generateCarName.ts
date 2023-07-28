@@ -92,10 +92,10 @@ function getRandomNumber(min: number, max: number): number {
 }
 
 export function getRandomCarName(): string {
-    const randomMarkNum = getRandomNumber(MIN_RANGE_NUMBER, MAX_RANGE_NUMBER);
-    const randomModelNum = getRandomNumber(MIN_RANGE_NUMBER, MAX_RANGE_NUMBER);
-    const mark = marksCarList[randomMarkNum];
-    const model = modelCarsList[randomModelNum];
+    const randomMarkNum: number = getRandomNumber(MIN_RANGE_NUMBER, MAX_RANGE_NUMBER);
+    const randomModelNum: number = getRandomNumber(MIN_RANGE_NUMBER, MAX_RANGE_NUMBER);
+    const mark: string = marksCarList[randomMarkNum];
+    const model: string = modelCarsList[randomModelNum];
 
     return `${mark} ${model}`;
 }

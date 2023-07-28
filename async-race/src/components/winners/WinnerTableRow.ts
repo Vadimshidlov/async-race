@@ -10,11 +10,11 @@ export type WinnerDataType = {
     name: string;
 };
 
-export interface IWinnersItem {
+export interface IWinnerTableRow {
     getWinnerHtml: () => HTMLElement
 }
 
-export class WinnersItem implements IWinnersItem {
+export class WinnerTableRow implements IWinnerTableRow {
     private winnersItem: HTMLElement = createElement({
         tag: 'tr',
         classNames: ['winners__item', 'winner'],
@@ -74,7 +74,7 @@ export class WinnersItem implements IWinnersItem {
     }
 
     private configureWinner(color: string): void {
-        const car = getCarImage(color, 60, 40);
+        const car: string = getCarImage(color, 60, 40);
         this.winnerCar.innerHTML = car;
     }
 

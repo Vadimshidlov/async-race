@@ -1,108 +1,109 @@
-import { EngineService } from '../../services/EngineService';
+import {EngineService, StartEngineType} from '../../services/EngineService';
 import createElement from '../element/createElement';
-import { getCarImage } from './getCarImage';
-import { getEndpoint } from '../utils/getEmdpoint';
+import {getCarImage} from './getCarImage';
+import {getRaceEndPoint} from '../utils/getRaceEndPoint';
 
 export type StartMoveResultType = {
-  roadTime: number;
-  carName: string;
-  carId: number;
+    roadTime: number;
+    carName: string;
+    carId: number;
 };
 
 export interface ICar {
-  startMove: () => Promise<StartMoveResultType | void>;
-  stopMove: () => Promise<void>;
-  setToStartPosition: () => void;
-  getCar: () => HTMLElement;
-  getCarId: () => number;
-  setCarColor: (colorValue: string) => void;
+    startMove: () => Promise<StartMoveResultType | void>;
+    stopMove: () => Promise<void>;
+    setToStartPosition: () => void;
+    getCar: () => HTMLElement;
+    getCarId: () => number;
+    setCarColor: (colorValue: string) => void;
 }
 
 export class Car implements ICar {
-  private readonly carElement: HTMLElement;
+    private readonly carElement: HTMLElement;
 
-  private carEngine = new EngineService();
+    private carEngineApi: EngineService = new EngineService();
 
-  private readonly CAR_ID: number;
+    private readonly carName: string;
 
-  private carAnimationId = 0;
+    private readonly MILLI_SECONDS_NUMBER: number = 1000;
 
-  private readonly carName: string;
+    private readonly START_POSITION_STYLE_VALUE: string = `translateX(0%)`;
 
-  private readonly MILI_SECONDS_NUMBER = 1000;
+    private CAR_ANIMATION_ID = 0;
 
-  constructor(color: string, carId: number, carName: string) {
-    this.CAR_ID = carId;
-    this.carName = carName;
-    this.carElement = createElement({ tag: 'div', classNames: ['car'], text: '' });
-    this.configureElement(color);
-  }
+    private readonly CAR_ID: number;
 
-  public async startMove(): Promise<StartMoveResultType | void> {
-    try {
-      const startEngine = await this.carEngine.startEngine(this.CAR_ID);
-      const speed = +startEngine.velocity;
-      const distance = +startEngine.distance;
-      const roadTime = distance / speed / this.MILI_SECONDS_NUMBER;
-      this.animate(roadTime);
-
-      await this.carEngine.driveEngine(this.CAR_ID);
-      await this.carEngine.stopEngine(this.CAR_ID);
-
-      return {
-        roadTime,
-        carName: this.carName,
-        carId: this.CAR_ID,
-      };
-    } catch (error) {
-      return await this.stopMove();
+    constructor(color: string, carId: number, carName: string) {
+        this.CAR_ID = carId;
+        this.carName = carName;
+        this.carElement = createElement({tag: 'div', classNames: ['car'], text: ''});
+        this.configureElement(color);
     }
-  }
 
-  public async stopMove(): Promise<void> {
-    cancelAnimationFrame(this.carAnimationId);
-    await this.carEngine.stopEngine(this.CAR_ID);
-  }
+    public async startMove(): Promise<StartMoveResultType | void> {
+        try {
+            const startEngine: StartEngineType = await this.carEngineApi.startEngine(this.CAR_ID);
+            const speed: number = +startEngine.velocity;
+            const distance: number = +startEngine.distance;
+            const roadTime: number = distance / speed / this.MILLI_SECONDS_NUMBER;
+            this.animate(roadTime);
 
-  public setToStartPosition(): void {
-    this.carElement.style.transform = `translateX(0%)`;
-  }
+            await this.carEngineApi.driveEngine(this.CAR_ID);
+            await this.carEngineApi.stopEngine(this.CAR_ID);
 
-  public getCar(): HTMLElement {
-    return this.carElement;
-  }
+            return {
+                roadTime,
+                carName: this.carName,
+                carId: this.CAR_ID,
+            };
 
-  public getCarId(): number {
-    return this.CAR_ID;
-  }
+        } catch (error) {
+            return await this.stopMove();
+        }
+    }
 
-  public setCarColor(colorValue: string): void {
-    const NEW_CAR = getCarImage(colorValue);
+    public async stopMove(): Promise<void> {
+        cancelAnimationFrame(this.CAR_ANIMATION_ID);
+        await this.carEngineApi.stopEngine(this.CAR_ID);
+    }
 
-    this.carElement.innerHTML = NEW_CAR;
-  }
+    public setToStartPosition(): void {
+        this.carElement.style.transform = this.START_POSITION_STYLE_VALUE;
+    }
 
-  private configureElement(color: string): void {
-    const CAR_IMAGE = getCarImage(color);
+    public getCar(): HTMLElement {
+        return this.carElement;
+    }
 
-    this.carElement.innerHTML = CAR_IMAGE;
-  }
+    public getCarId(): number {
+        return this.CAR_ID;
+    }
 
-  private animate(duration: number): void {
-    const START_TIME = new Date().getTime();
-    const END_POINT = getEndpoint();
+    public setCarColor(colorValue: string): void {
+        const newCar: string = getCarImage(colorValue);
+        this.carElement.innerHTML = newCar;
+    }
 
-    const moveStep = (): void => {
-      const CURRENT_TIME = new Date().getTime();
-      const DELTA_TIME = Math.min((CURRENT_TIME - START_TIME) / this.MILI_SECONDS_NUMBER);
+    private configureElement(color: string): void {
+        const carImage: string = getCarImage(color);
+        this.carElement.innerHTML = carImage;
+    }
 
-      this.carElement.style.transform = `translateX(${(DELTA_TIME * END_POINT) / duration}%)`;
+    private animate(duration: number): void {
+        const startTime: number = new Date().getTime();
+        const endPoint: number = getRaceEndPoint();
 
-      if (DELTA_TIME <= duration) {
-        this.carAnimationId = requestAnimationFrame(moveStep);
-      }
-    };
+        const moveStep = (): void => {
+            const currentTime: number = new Date().getTime();
+            const deltaTime: number = Math.min((currentTime - startTime) / this.MILLI_SECONDS_NUMBER);
 
-    this.carAnimationId = requestAnimationFrame(moveStep);
-  }
+            this.carElement.style.transform = `translateX(${(deltaTime * endPoint) / duration}%)`;
+
+            if (deltaTime <= duration) {
+                this.CAR_ANIMATION_ID = requestAnimationFrame(moveStep);
+            }
+        };
+
+        this.CAR_ANIMATION_ID = requestAnimationFrame(moveStep);
+    }
 }
