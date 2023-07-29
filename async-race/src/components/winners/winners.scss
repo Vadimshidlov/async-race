@@ -25,15 +25,6 @@
     margin-bottom: 15px;
 
     .create-block__button {
-      // width: 60px;
-      // padding: 5px 5px 24px 5px;
-      // height: 20px;
-      // border-radius: 5px;
-      // font-size: 1.1rem;
-      // font-weight: 600;
-      // transition: all 0.5s;
-      // cursor: pointer;
-
       width: 46px;
       padding: 5px 5px 22px 5px;
       height: 19px;
@@ -64,18 +55,7 @@
   }
 }
 
-.winners__table-header {
-  // display: flex;
-  // column-gap: 65px;
-  // font-size: 1.3rem;
-  // margin-bottom: 10px;
-}
-
 .winners__table {
-  // display: flex;
-  // flex-direction: column;
-
-  // width: 80%;
   width: 100%;
   margin-bottom: 20px;
   border: 1px solid #dddddd;
@@ -98,28 +78,5 @@
     @media (max-width: 600px) {
       font-size: 1rem;
     }
-  }
-
-  .winners__item {
-    // display: flex;
-    // column-gap: 40px;
-    // font-size: 1.3rem;
-    // align-items: center;
-
-    /* .winner__number {
-      margin-right: 41px;
-      margin-left: 27px;
-    }
-    .winner__car {
-      margin-right: 8px;
-    }
-    .winner__name {
-      margin-right: 45px;
-    }
-    .winner__wins {
-      margin-right: 83px;
-    }
-    .winner__time {
-    } */
   }
 }
