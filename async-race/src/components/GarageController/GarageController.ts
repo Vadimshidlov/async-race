@@ -84,13 +84,11 @@ export class GarageController implements IGarageController {
         const controllerSection = createElement({
             tag: 'section',
             classNames: ['controller'],
-            text: '',
         });
 
         const createBlock = createElement({
             tag: 'div',
             classNames: ['controller__block', 'block-create'],
-            text: '',
         });
         createBlock.append(
             this.createInputElement,
@@ -101,7 +99,6 @@ export class GarageController implements IGarageController {
         const updateBlock = createElement({
             tag: 'div',
             classNames: ['controller__block', 'block-update'],
-            text: '',
         });
         this.updateButtonElement.disabled = true;
         this.updateInputElement.disabled = true;
@@ -115,7 +112,6 @@ export class GarageController implements IGarageController {
         const raceBlock = createElement({
             tag: 'div',
             classNames: ['controller__block', 'block-race'],
-            text: '',
         });
 
         this.raceResetButtonElement.disabled = true;

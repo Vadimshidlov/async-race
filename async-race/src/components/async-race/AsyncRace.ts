@@ -38,7 +38,6 @@ export class AsyncRace implements IAsyncRace {
     private main = createElement({
         tag: this.MAIN_TAG,
         classNames: [...this.mainClassnamesList],
-        text: '',
     });
 
     constructor() {

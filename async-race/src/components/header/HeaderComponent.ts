@@ -3,7 +3,7 @@ import createElement from '../element/createElement';
 import './header.scss';
 
 export default function HeaderComponent(): HTMLElement {
-    const header = createElement({tag: 'header', classNames: ['header', '_container'], text: ''});
+    const header = createElement({tag: 'header', classNames: ['header', '_container']});
 
     const headerTitleText = `It's time to Async-Race!`;
     const headerTitle = createElement({

@@ -35,7 +35,6 @@ export class Garage implements IGarage {
     private garageElement: HTMLElement = createElement({
         tag: 'div',
         classNames: ['garage'],
-        text: '',
     });
 
     private readonly raceMembersList: EquipmentCar[] = [];
@@ -60,7 +59,6 @@ export class Garage implements IGarage {
     private garageCarsCountBlock: HTMLElement = createElement({
         tag: 'span',
         classNames: ['block-garage__count'],
-        text: '',
     });
 
     private garagePageNumberElement: HTMLElement = createElement({
@@ -107,19 +105,16 @@ export class Garage implements IGarage {
         const garageBlock = createElement({
             tag: 'section',
             classNames: ['garage__block', 'block-garage'],
-            text: '',
         });
 
         const garageInfo = createElement({
             tag: 'div',
             classNames: ['block-garage__info'],
-            text: '',
         });
 
         const garagePageController = createElement({
             tag: 'div',
             classNames: ['block-garage__page-controller'],
-            text: '',
         });
 
         this.prevPageButtonElement.disabled = true;
@@ -129,7 +124,6 @@ export class Garage implements IGarage {
         const garagePageControllerWrapper = createElement({
             tag: 'div',
             classNames: ['page-controller__wrapper'],
-            text: '',
         });
 
         garagePageControllerWrapper.append(garagePageController);
@@ -143,7 +137,6 @@ export class Garage implements IGarage {
         const garagePageHeader = createElement({
             tag: 'div',
             classNames: ['block-garage__header'],
-            text: '',
         });
 
         garagePageHeader.append(this.garageControllerElement, garageInfo);
@@ -462,7 +455,6 @@ export class Garage implements IGarage {
         const winnerPopupBlock: HTMLElement = createElement({
             tag: 'div',
             classNames: ['winner__popup', `popup`],
-            text: '',
         });
 
         const winnerPopupMessage: HTMLElement = createElement({

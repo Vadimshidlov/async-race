@@ -22,19 +22,16 @@ export class WinnersTable implements IWinnersTable {
     private winnersBlock: HTMLElement = createElement({
         tag: 'section',
         classNames: ['winners-block'],
-        text: '',
     });
 
     private winnersTable: HTMLElement = createElement({
         tag: 'table',
         classNames: ['winners__table'],
-        text: '',
     });
 
     private winnersTableBody: HTMLElement = createElement({
         tag: 'tbody',
         classNames: ['winners__table-body'],
-        text: '',
     });
 
     private winnersTitle: HTMLElement = createElement({
@@ -100,7 +97,6 @@ export class WinnersTable implements IWinnersTable {
         const winnersInfoBlock: HTMLElement = createElement({
             tag: 'div',
             classNames: ['winners__info'],
-            text: '',
         });
 
         winnersInfoBlock.append(this.winnersTitle, this.winnersTitlePage);
@@ -108,13 +104,11 @@ export class WinnersTable implements IWinnersTable {
         const winnersTableHeaderBlock: HTMLElement = createElement({
             tag: 'thead',
             classNames: ['winners__table-header', 'table-header'],
-            text: '',
         });
 
         const tableHeaderTr = createElement({
             tag: 'tr',
             classNames: ['winners__table-header', 'table-header'],
-            text: '',
         });
 
         winnersTableHeaderBlock.append(tableHeaderTr);
@@ -150,7 +144,6 @@ export class WinnersTable implements IWinnersTable {
         const winnersPageControllerBlock = createElement({
             tag: 'div',
             classNames: ['winners__page-controller'],
-            text: ``,
         });
 
         winnersPageControllerBlock.append(this.prevPageButtonElement, this.nextPageButtonElement);

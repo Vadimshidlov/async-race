@@ -20,7 +20,6 @@ export class PageController implements IPageController {
         const pageControllerBlock: HTMLElement = createElement({
             tag: this.PAGE_CONTROLLER_TAG,
             classNames: this.pageControllerClassnamesList,
-            text: '',
         });
         pageControllerBlock.append(this.toGarageButtonElement, this.toWinnersButtonElement);
 

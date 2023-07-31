@@ -36,7 +36,7 @@ export class Car implements ICar {
     constructor(color: string, carId: number, carName: string) {
         this.CAR_ID = carId;
         this.carName = carName;
-        this.carElement = createElement({tag: 'div', classNames: ['car'], text: ''});
+        this.carElement = createElement({tag: 'div', classNames: ['car']});
         this.configureElement(color);
     }
 

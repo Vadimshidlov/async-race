@@ -18,7 +18,6 @@ export class WinnerTableRow implements IWinnerTableRow {
     private winnersItem: HTMLElement = createElement({
         tag: 'tr',
         classNames: ['winners__item', 'winner'],
-        text: '',
     });
 
     private readonly winnerNumber: HTMLElement;
@@ -41,7 +40,6 @@ export class WinnerTableRow implements IWinnerTableRow {
         this.winnerCar = createElement({
             tag: 'td',
             classNames: ['winner__car'],
-            text: '',
         });
 
         this.winnerName = createElement({

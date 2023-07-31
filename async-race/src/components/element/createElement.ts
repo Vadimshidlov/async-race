@@ -4,7 +4,7 @@ export default function createElement<T extends HTMLElement>(
     {
         tag,
         classNames,
-        text,
+        text = '',
     }: ElementDataType): T {
     const element = <T>document.createElement(tag);
     element.classList.add(...classNames);

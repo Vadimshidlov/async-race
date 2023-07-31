@@ -18,7 +18,6 @@ export class ColorPicker implements IColorPicker {
         this.pickerElement = createElement<HTMLInputElement>({
             tag: 'input',
             classNames: ['create-block__input__color-picker'],
-            text: '',
         });
         this.configureElement();
         this.addEventListeners();

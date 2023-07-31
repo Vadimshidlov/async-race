@@ -25,7 +25,6 @@ export class CreateInputElement implements ICreateInputElement {
         this.inputElement = createElement({
             tag: this.INPUT_TAG,
             classNames: [this.INPUT_CLASSNAME],
-            text: '',
         });
         this.configureElement();
     }

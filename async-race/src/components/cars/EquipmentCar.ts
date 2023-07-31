@@ -81,7 +81,6 @@ export class EquipmentCar implements IEquipmentCar {
         this.equipmentCar = createElement({
             tag: 'div',
             classNames: ['car-filed'],
-            text: '',
         });
         this.CAR_FIELD_ID = `carField-${id}`;
         this.carName = carName;
@@ -175,19 +174,16 @@ export class EquipmentCar implements IEquipmentCar {
         const carControllers: HTMLElement = createElement({
             tag: 'div',
             classNames: ['car-filed__controller', 'controller'],
-            text: '',
         });
 
         const stateControllerButtons: HTMLElement = createElement({
             tag: 'div',
             classNames: ['controller-state'],
-            text: '',
         });
 
         const moveControllerButtons: HTMLElement = createElement({
             tag: 'div',
             classNames: ['controller-move'],
-            text: '',
         });
 
         stateControllerButtons.append(this.selectCarButton, this.removeCarButton, this.carNameElement);
@@ -198,12 +194,10 @@ export class EquipmentCar implements IEquipmentCar {
         const roadWrapper: HTMLElement = createElement({
             tag: 'div',
             classNames: ['car-filed_road'],
-            text: '',
         });
         const flagImage: HTMLImageElement = createElement<HTMLImageElement>({
             tag: 'img',
             classNames: ['car-filed__flag'],
-            text: '',
         });
         flagImage.src = FLAG;
 
